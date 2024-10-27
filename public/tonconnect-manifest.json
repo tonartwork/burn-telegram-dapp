@@ -1,5 +1,5 @@
 {
-  "url": "https://ton.vote",
-  "name": "TON Vote",
+  "url": "https://localhost:3000",
+  "name": "Sense Test App",
   "iconUrl": "https://ton.vote/logo.png"
 }
