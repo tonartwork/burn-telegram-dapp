@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
@@ -27,6 +28,11 @@ export default function Home() {
           <CardFooter>
             <Button className="w-full bg-black text-white hover:bg-gray-800">Connect Wallet</Button>
           </CardFooter>
+          <Link href="/collection" passHref>
+            <Button className="w-full mt-4 bg-gray-200 text-black hover:bg-gray-300">
+              View Collection
+            </Button>
+          </Link>
         </Card>
         <p className="text-center text-sm text-gray-600 mb-8">
           Connect your wallet to buy and mint NFT
