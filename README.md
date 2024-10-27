@@ -9,9 +9,8 @@ Telegram Mini Apps platform using the following technologies and libraries:
 - [@telegram-apps SDK](https://docs.telegram-mini-apps.com/packages/telegram-apps-sdk/2-x)
 - [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
 
-> The template was created using [pnpm](https://pnpm.io/). Therefore, it is
-> required to use it for this project as well. Using other package managers, you
-> will receive a corresponding error.
+> The template now uses [Bun](https://bun.sh/). Make sure you have Bun installed
+> before proceeding.
 
 ## Install Dependencies
 
@@ -19,7 +18,7 @@ If you have just cloned this template, you should install the project
 dependencies using the command:
 
 ```Bash
-pnpm install
+bun install
 ```
 
 ## Scripts
@@ -38,7 +37,7 @@ This project contains the following scripts:
 To run a script, use the `pnpm run` command:
 
 ```Bash
-pnpm run {script}
+bun run {script}
 # Example: pnpm run build
 ```
 
@@ -58,7 +57,7 @@ process.
 To run the application in the development mode, use the `dev` script:
 
 ```bash
-pnpm run dev
+bun run dev
 ```
 
 After this, you will see a similar message in your terminal:
