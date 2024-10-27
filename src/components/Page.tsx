@@ -3,13 +3,15 @@
 import { backButton } from '@telegram-apps/sdk-react';
 import { PropsWithChildren, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
-export function Page({ children, back = true }: PropsWithChildren<{
+export function Page({ children, back = true, className, ...props }: PropsWithChildren<{
   /**
    * True if it is allowed to go back from this page.
    * @default true
    */
   back?: boolean
+  className?: string
 }>) {
   const router = useRouter();
 
@@ -27,5 +29,9 @@ export function Page({ children, back = true }: PropsWithChildren<{
     });
   }, [router]);
 
-  return <>{children}</>;
+  return (
+    <div className={cn('min-h-screen', className)} {...props}>
+      {children}
+    </div>
+  );
 }

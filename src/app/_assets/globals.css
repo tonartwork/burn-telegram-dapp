@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: var(--tg-theme-secondary-bg-color, white);
+  background-color: #FFFFFF;
 }
 
 @layer base {
