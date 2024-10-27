@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -20,10 +19,13 @@ export default function CollectionPage() {
         
         <Card className="mb-8 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-4">
-            <ImageCarousel onSelect={setSelectedImage} />
+            <ImageCarousel onSelect={setSelectedImage} selectedImage={selectedImage} />
           </CardContent>
           <CardFooter>
-            <Button className="w-full bg-black text-white hover:bg-gray-800">
+            <Button 
+              className="w-full bg-black text-white hover:bg-gray-800"
+              disabled={selectedImage === null}
+            >
               Burn NFT
             </Button>
           </CardFooter>
