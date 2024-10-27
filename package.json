@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun run next dev",
-    "dev:https": "bun run next dev --experimental-https",
-    "build": "bun run next build",
-    "start": "bun run next start",
-    "lint": "bun run next lint"
+    "dev": "next dev",
+    "dev:https": "next dev --experimental-https",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@telegram-apps/sdk-react": "^2.0.5",
