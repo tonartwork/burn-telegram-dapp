@@ -51,7 +51,7 @@ const config = {
   				'5': 'hsl(var(--chart-5))'
   			},
   			mainText: '#000000',
-  			secondaryText: '#FFFFFF',
+  			secondaryText: '#FFFFFF'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
