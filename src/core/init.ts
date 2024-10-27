@@ -25,22 +25,24 @@ export function init(debug: boolean): void {
   themeParams.mount();
   initData.restore();
 
-  let isMounted: boolean = false;
-
-  if (!isMounted) {
-    void viewport.mount().catch((e) => {
+  // Use a static variable to track if viewport has been mounted
+  if (!init.viewportMounted) {
+    void viewport.mount().then(() => {
+      // Define components-related CSS variables after viewport is mounted
+      viewport.bindCssVars();
+      miniApp.bindCssVars();
+      themeParams.bindCssVars();
+      init.viewportMounted = true;
+    }).catch((e) => {
       console.error("Something went wrong mounting the viewport", e);
     });
-    isMounted = true;
   }
-
-  // Define components-related CSS variables.
-  viewport.bindCssVars();
-  miniApp.bindCssVars();
-  themeParams.bindCssVars();
 
   // Add Eruda if needed.
   debug && import('eruda')
     .then((lib) => lib.default.init())
     .catch(console.error);
 }
+
+// Add a static property to the init function
+init.viewportMounted = false;
