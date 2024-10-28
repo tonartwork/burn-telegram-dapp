@@ -45,11 +45,31 @@ export class TonApiService {
     public async getNftCollection(address: string) {
         try {
             const parsedAddress = Address.parse(address);
-            const collection = await this.client.nft.getNftCollection(parsedAddress);
-            return collection;
+            const response = await this.client.nft.getNftCollection(parsedAddress);
+            
+            // Check if response is valid
+            if (!response) {
+                throw new Error('Invalid response from TON API');
+            }
+            
+            return response;
         } catch (error) {
-            console.error('Error fetching NFT collection:', error);
-            throw error;
+            // Handle API errors
+            if (error instanceof Response) {
+                const errorText = await error.text();
+                console.error('API Error:', errorText);
+                throw new Error(errorText);
+            }
+            
+            // Handle other types of errors
+            if (error instanceof Error) {
+                console.error('Error fetching NFT collection:', error.message);
+                throw error;
+            }
+            
+            // Handle unknown errors
+            console.error('Unknown error fetching NFT collection:', error);
+            throw new Error('Failed to fetch NFT collection');
         }
     }
 }
