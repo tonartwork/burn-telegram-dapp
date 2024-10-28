@@ -17,28 +17,28 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
   gap = 32
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const duplicatedImages = [...images, ...images];
+  // Triple the images to ensure smooth looping
+  const duplicatedImages = [...images, ...images, ...images];
   
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Create dynamic keyframes
     const keyframesStyle = document.createElement('style');
     const animationName = `slide-${speed}`;
+    const totalWidth = (width + gap) * images.length;
     
     keyframesStyle.textContent = `
       @keyframes ${animationName} {
         0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+        100% { transform: translateX(-${totalWidth}px); }
       }
     `;
     document.head.appendChild(keyframesStyle);
 
-    // Cleanup
     return () => {
       keyframesStyle.remove();
     };
-  }, [speed]);
+  }, [speed, width, gap, images.length]);
 
   return (
     <div 
@@ -51,6 +51,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
         style={{ 
           gap: `${gap}px`,
           animation: `slide-${speed} ${speed}s linear infinite`,
+          willChange: 'transform'
         }}
       >
         {duplicatedImages.map((src, index) => (
@@ -65,7 +66,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
               width={width}
               height={height}
               className="w-full h-full object-cover rounded-xl"
-              priority={index < 3}
+              priority={index < images.length}
             />
           </div>
         ))}
