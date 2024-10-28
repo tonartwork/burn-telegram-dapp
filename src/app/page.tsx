@@ -19,24 +19,34 @@ export default function Home() {
 
   useEffect(() => {
     const fetchCollection = async () => {
-      try {
-        const result = await tonApiService.getNftCollection('EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q');
-        console.log('NFT Collection:', result);
-        if (result) {
-          setCollection(result);
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error('Error fetching collection:', error.message);
-          // Optionally show error to user here
-        } else {
-          console.error('Unknown error:', error);
-        }
-      }
+      const result = await tonApiService.getNftCollection('EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q');
+      console.log('NFT Collection:', result);
     };
 
     fetchCollection();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchCollection = async () => {
+  //     try {
+  //         const response = await fetch('https://tonapi.io/v2/nfts/collections/EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q', {
+  //             method: 'GET',
+  //             headers: {
+  //                 'Content-Type': 'application/json',
+  //             }
+  //         });
+  //         if (!response.ok) {
+  //             const errorBody = await response.json();
+  //             throw new Error(errorBody.message || 'Error fetching NFT collection');
+  //         }
+  //         const data = await response.json();
+  //         console.log('NFT Collection:', data);
+  //     } catch (error) {
+  //         console.error('Error fetching collection:', error);
+  //     }
+  //   };
+  //   fetchCollection();
+  // }, []);
 
   return (
     <Page back={false}>

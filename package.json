@@ -14,6 +14,7 @@
     "@telegram-apps/sdk-react": "^2.0.5",
     "@telegram-apps/telegram-ui": "^2.1.5",
     "@ton-api/client": "^0.2.0",
+    "@ton-api/ton-adapter": "^0.2.0",
     "@ton/core": "^0.59.0",
     "@tonconnect/ui-react": "^2.0.5",
     "autoprefixer": "^10.4.20",
