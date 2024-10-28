@@ -1,14 +1,15 @@
 'use client';
 
-import React, { forwardRef, ForwardedRef, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
-import { TonConnectButton, useTonWallet, TonConnectButtonProps, useTonConnectUI } from '@tonconnect/ui-react';
-
-TonConnectButton.displayName = 'TonConnectButton';
+import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
+import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
+import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
+import { MainHeader } from '@/components/ui/typo/MainHeader';
 
 export default function Home() {
   const wallet = useTonWallet();
@@ -16,10 +17,11 @@ export default function Home() {
 
   return (
     <Page back={false}>
-      <div className="container mx-auto px-4 py-8 bg-white text-mainText">
-        <h1 className="text-4xl font-bold mb-8 text-center">Sense</h1>
+      <div className="container mx-auto px-4 py-12 bg-white text-mainText">
+        <MainHeader>Sense</MainHeader>
+        { wallet && <WalletComponent /> }
         <Card className="mb-8 bg-white text-mainText border-none rounded-xl overflow-hidden">
-          <CardHeader className="pb-0">
+          <CardHeader className="pb-0 text-center">
             <CardTitle className="text-2xl font-bold">Guardiance by Seedorova</CardTitle>
             <CardDescription className="text-gray-600">1,024 unique art-objects</CardDescription>
           </CardHeader>
@@ -34,21 +36,24 @@ export default function Home() {
             />
           </CardContent>
           <CardFooter>
-            <Button 
-              className="w-full bg-black text-white hover:bg-gray-800"
-              onClick={() => tonConnectUI.openModal()}
-            >
-              Connect Wallet
-            </Button>
+            {wallet ? (
+              <Link href="/collection" className="w-full">
+                <Button className="w-full bg-black text-white hover:bg-gray-800">
+                  View Collection
+                </Button>
+              </Link>
+            ) : (
+              <Button 
+                className="w-full bg-black text-white hover:bg-gray-800"
+                onClick={() => tonConnectUI.openModal()}
+              >
+                Connect Wallet
+              </Button>
+            )}
           </CardFooter>
         </Card>
-        <Link href="/collection" passHref>
-          <Button className="w-full mt-4 bg-gray-200 text-black hover:bg-gray-300">
-            View Collection (for testing only)
-          </Button>
-        </Link>
         <p className="text-center text-sm text-gray-600 mb-8">
-          {wallet ? 'Wallet connected' : 'Connect your wallet to buy and mint NFT'}
+          {wallet ? '' : 'Connect your wallet to buy and mint NFT'}
         </p>
       </div>
     </Page>
