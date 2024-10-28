@@ -10,54 +10,39 @@ import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
-import { tonApiService, NftItems } from '@/core/services/TonApiService';
-
+import { tonApiService } from '@/core/services/TonApiService';
+import nftPreviews from '@/lib/nftPreviews';
 export default function Home() {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
-  const [nftCollection, setNftCollection] = useState<NftItems | null>(null);
-
-  useEffect(() => {
-    const fetchCollection = async () => {
-      try {
-        const items = await tonApiService.getNftCollectionItems(
-          'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q'
-        );
-        console.log('NFT Collection:', items);
-        setNftCollection(items);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error('Error fetching collection:', error.message);
-        } else {
-          console.error('Unknown error:', error);
-        }
-      }
-    };
-
-    fetchCollection();
-  }, []);
+  const [nftImages, setNftImages] = useState<string[]>([]);
 
   // useEffect(() => {
   //   const fetchCollection = async () => {
   //     try {
-  //         const response = await fetch('https://tonapi.io/v2/nfts/collections/EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q', {
-  //             method: 'GET',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //             }
-  //         });
-  //         if (!response.ok) {
-  //             const errorBody = await response.json();
-  //             throw new Error(errorBody.message || 'Error fetching NFT collection');
-  //         }
-  //         const data = await response.json();
-  //         console.log('NFT Collection:', data);
+  //       const items = await tonApiService.getNftCollectionItems(
+  //         'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q',
+  //         64
+  //       );
+  //       console.log('NFT Collection:', items);
+  //       // Extract preview URLs from the NFT items
+  //       const images = items.nft_items
+  //         .map(item => item.previews?.[2]?.url || '')
+  //         .filter(url => url !== '');
+  //       setNftImages(images);
   //     } catch (error) {
-  //         console.error('Error fetching collection:', error);
+  //       if (error instanceof Error) {
+  //         console.error('Error fetching collection:', error.message);
+  //       } else {
+  //         console.error('Unknown error:', error);
+  //       }
   //     }
   //   };
+
   //   fetchCollection();
   // }, []);
+
+  // console.log('NFT Images:', nftImages);
 
   return (
     <Page back={false}>
@@ -68,11 +53,11 @@ export default function Home() {
         </div>
         <Card className="mb-0 pt-8 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <ImageSlider
-            speed={60}
-            width={150}
-            height={150}
-            gap={32}
-            images={Array(18).fill('/images/guardiance-image.png')}
+            speed={256}
+            width={220}
+            height={220}
+            gap={24}
+            images={nftImages.length > 0 ? nftImages : nftPreviews}
           />
           <div className="px-4">
             <CardHeader className="mb-12 text-center">
