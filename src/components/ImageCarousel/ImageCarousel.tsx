@@ -18,13 +18,13 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ onSelect, selected
   const images = Array(18).fill('/images/guardiance-image.png');
 
   const renderGrid = (startIndex: number) => (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6">
       {images.slice(startIndex, startIndex + 9).map((src, index) => (
         <div 
           key={startIndex + index} 
           className={cn(
             "relative cursor-pointer",
-            selectedImage === startIndex + index && "ring-2 ring-green-500"
+            selectedImage === startIndex + index && "ring-2 ring-green-500 opacity-70"
           )}
           onClick={() => onSelect(startIndex + index)}
         >
@@ -56,8 +56,8 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({ onSelect, selected
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className='ml-6' />
+      <CarouselNext className='mr-6' />
     </Carousel>
   );
 };

@@ -26,7 +26,7 @@ export const WalletComponent: React.FC = () => {
           {wallet?.account?.address ? (
             <span className="font-semibold text-sm text-gray-700 flex items-center gap-2">
               {formatAddress(wallet.account.address)}
-              <Wallet size={20} className="text-gray-500" />
+              <Wallet size={20} className="text-gray-300" />
             </span>
           ) : (
             <span className="font-semibold text-sm text-gray-700 flex items-center gap-2">
