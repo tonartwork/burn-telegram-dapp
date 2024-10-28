@@ -1,18 +1,41 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
+import { Wallet } from 'lucide-react';
 
 export const WalletComponent: React.FC = () => {
-  // Hardcoded wallet address for now
-  const walletAddress = 'EQD...abc123';
+  const wallet = useTonWallet();
+  const [tonConnectUI] = useTonConnectUI();
+
+  const formatAddress = (address: string) => {
+    if (!address) return '';
+    return `${address.slice(0, 4)}...${address.slice(-3)}`;
+  };
+
+  const handleClick = () => {
+    tonConnectUI.openModal();
+  };
 
   return (
-    <Card className="mb-4 bg-gray-100 text-mainText border-none rounded-xl overflow-hidden">
-      <CardContent className="py-2 px-4">
-        <div className="flex justify-between items-center">
-          <span className="font-semibold">Wallet:</span>
-          <span className="text-sm truncate max-w-[200px]">{walletAddress}</span>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex justify-center mb-4">
+      <Card 
+        className="bg-white border border-gray-300 rounded-full cursor-pointer w-32 h-10 flex items-center justify-center"
+        onClick={handleClick}
+      >
+        <CardContent className="flex items-center gap-2 p-2">
+          {wallet?.account?.address ? (
+            <span className="font-semibold text-sm text-gray-700 flex items-center gap-2">
+              {formatAddress(wallet.account.address)}
+              <Wallet size={20} className="text-gray-500" />
+            </span>
+          ) : (
+            <span className="font-semibold text-sm text-gray-700 flex items-center gap-2">
+              Connect
+              <Wallet size={20} className="text-gray-500" />
+            </span>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
