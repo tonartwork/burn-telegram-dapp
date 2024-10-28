@@ -10,21 +10,21 @@ import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
-import { tonApiService } from '@/core/services/TonApiService';
+import { tonApiService, NftItems } from '@/core/services/TonApiService';
 
 export default function Home() {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
-  const [nftCollection, setNftCollection] = useState(null);
+  const [nftCollection, setNftCollection] = useState<NftItems | null>(null);
 
   useEffect(() => {
     const fetchCollection = async () => {
       try {
-        const result = await tonApiService.getNftCollection(
+        const items = await tonApiService.getNftCollectionItems(
           'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q'
         );
-        console.log('NFT Collection:', result);
-        setNftCollection(result);
+        console.log('NFT Collection:', items);
+        setNftCollection(items);
       } catch (error) {
         if (error instanceof Error) {
           console.error('Error fetching collection:', error.message);

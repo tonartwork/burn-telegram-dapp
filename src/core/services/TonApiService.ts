@@ -2,6 +2,8 @@
 
 import { HttpClient, Api } from 'tonapi-sdk-js';
 
+export type { NftItems } from 'tonapi-sdk-js';
+
 export class TonApiService {
   private static instance: TonApiService;
   private client: Api<any>;
@@ -107,6 +109,47 @@ export class TonApiService {
     } catch (error) {
       console.error('Error fetching jetton info:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Fetches NFT items from a collection
+   * @param address Collection address string
+   * @param limit Number of items to fetch (default: 1000)
+   * @param offset Offset for pagination (default: 0)
+   * @returns Promise with collection items
+   */
+  public async getNftCollectionItems(address: string, limit: number = 1000, offset: number = 0) {
+    try {
+      // Retrieve NFT items from the collection
+      const items = await this.client.nft.getItemsFromCollection(address, {
+        limit,
+        offset,
+      });
+
+      // Check if response is valid
+      if (!items) {
+        throw new Error('Invalid response from TON API');
+      }
+
+      return items;
+    } catch (error) {
+      // Handle API errors
+      if (error instanceof Response && typeof error.json === 'function') {
+        const errorText = await error.text();
+        console.error('API Error:', errorText);
+        throw new Error(errorText);
+      }
+
+      // Handle other types of errors
+      if (error instanceof Error) {
+        console.error('Error fetching NFT collection items:', error.message);
+        throw error;
+      }
+
+      // Handle unknown errors
+      console.error('Unknown error fetching NFT collection items:', error);
+      throw new Error('Failed to fetch NFT collection items');
     }
   }
 }
