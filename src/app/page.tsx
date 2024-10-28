@@ -15,12 +15,23 @@ import { tonApiService } from '@/core/services/TonApiService';
 export default function Home() {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
-  const [collection, setCollection] = useState(null);
+  const [nftCollection, setNftCollection] = useState(null);
 
   useEffect(() => {
     const fetchCollection = async () => {
-      const result = await tonApiService.getNftCollection('EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q');
-      console.log('NFT Collection:', result);
+      try {
+        const result = await tonApiService.getNftCollection(
+          'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q'
+        );
+        console.log('NFT Collection:', result);
+        setNftCollection(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Error fetching collection:', error.message);
+        } else {
+          console.error('Unknown error:', error);
+        }
+      }
     };
 
     fetchCollection();
