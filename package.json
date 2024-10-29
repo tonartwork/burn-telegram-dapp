@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "bun run next dev",
     "dev:https": "bun run next dev --experimental-https",
-    "build": "bun run next build && cp .env.production .env",
+    "build": "NODE_ENV=production bun run next build && cp .env.production .env",
     "start": "bun run next start",
     "lint": "bun run next lint"
   },
