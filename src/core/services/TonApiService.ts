@@ -4,6 +4,7 @@ import { HttpClient, Api } from 'tonapi-sdk-js';
 
 export type { NftItem } from 'tonapi-sdk-js';
 import { env } from '@/core/config/env';
+import { Address } from '@ton/core';
 
 export class TonApiService {
   private static instance: TonApiService;
@@ -166,13 +167,15 @@ export class TonApiService {
         offset,
       });
 
+      console.log('accountNfts', accountNfts);
+
       if (!accountNfts?.nft_items) {
         return [];
       }
 
       // Filter NFTs to only include those from the specified collection
       const collectionNfts = accountNfts.nft_items.filter(
-        nft => nft.collection?.address === collectionAddress
+        nft => nft.collection?.address === Address.parse(collectionAddress).toRawString()
       );
 
       return collectionNfts;

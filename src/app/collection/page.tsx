@@ -12,11 +12,12 @@ import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { tonApiService, NftItem } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
 import { useTonWallet } from '@tonconnect/ui-react';
+import { Address } from '@ton/core';
 
 export default function CollectionPage() {
   const router = useRouter();
   const wallet = useTonWallet();
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
   const [userNfts, setUserNfts] = useState<NftItem[]>([]);
   
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function CollectionPage() {
       router.push('/');
       return;
     }
-
+  
     const fetchNfts = async () => {
       try {
         const nfts = await tonApiService.getUserCollectionNfts(
@@ -41,7 +42,6 @@ export default function CollectionPage() {
     
     fetchNfts();
   }, [wallet, router]);
-  console.log('userNfts', userNfts);
 
   return (
     <Page>
@@ -50,12 +50,16 @@ export default function CollectionPage() {
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
-            <ImageCarousel onSelect={setSelectedImage} selectedImage={selectedImage} />
+            <ImageCarousel 
+              items={userNfts}
+              onSelect={setSelectedNft}
+              selectedAddress={selectedNft?.address || null}
+            />
           </CardContent>
           <CardFooter>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={selectedImage === null}
+              disabled={!selectedNft}
             >
               Burn NFT
             </Button>
