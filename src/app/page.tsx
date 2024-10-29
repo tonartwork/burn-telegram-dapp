@@ -10,39 +10,12 @@ import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
-import { tonApiService } from '@/core/services/TonApiService';
 import nftPreviews from '@/lib/nftPreviews';
+
 export default function Home() {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
   const [nftImages, setNftImages] = useState<string[]>([]);
-
-  // useEffect(() => {
-  //   const fetchCollection = async () => {
-  //     try {
-  //       const items = await tonApiService.getNftCollectionItems(
-  //         'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q',
-  //         64
-  //       );
-  //       console.log('NFT Collection:', items);
-  //       // Extract preview URLs from the NFT items
-  //       const images = items.nft_items
-  //         .map(item => item.previews?.[2]?.url || '')
-  //         .filter(url => url !== '');
-  //       setNftImages(images);
-  //     } catch (error) {
-  //       if (error instanceof Error) {
-  //         console.error('Error fetching collection:', error.message);
-  //       } else {
-  //         console.error('Unknown error:', error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchCollection();
-  // }, []);
-
-  // console.log('NFT Images:', nftImages);
 
   return (
     <Page back={false}>
