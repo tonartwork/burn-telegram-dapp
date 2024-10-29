@@ -2,18 +2,15 @@
 
 import { HttpClient, Api } from 'tonapi-sdk-js';
 
-export type { NftItems } from 'tonapi-sdk-js';
+export type { NftItem } from 'tonapi-sdk-js';
+import { env } from '@/core/config/env';
 
 export class TonApiService {
   private static instance: TonApiService;
   private client: Api<any>;
 
   private constructor() {
-    // Move your API key to an environment variable for security
-    // const apiKey = process.env.TON_API_KEY!;
-    const apiKey = 'AFNUZOGRED4VD5YAAAACN3L5EG2NZQFUVXXEZXNNQN3XQLNLB4IVH2WGFQFDSXPCWO5XGUI';
-  
-    // Configure the HTTP client with your host and token
+    const apiKey = env.NEXT_PUBLIC_TONAPI_KEY;
     const httpClient = new HttpClient({
       baseUrl: 'https://tonapi.io',
       baseApiParams: {
@@ -150,6 +147,52 @@ export class TonApiService {
       // Handle unknown errors
       console.error('Unknown error fetching NFT collection items:', error);
       throw new Error('Failed to fetch NFT collection items');
+    }
+  }
+
+  /**
+   * Fetches NFTs from a specific collection owned by a wallet address
+   * @param collectionAddress Collection address string
+   * @param walletAddress Wallet address string
+   * @param limit Number of items to fetch (default: 256)
+   * @param offset Offset for pagination (default: 0)
+   * @returns Promise with user's NFTs from the collection
+   */
+  public async getUserCollectionNfts(collectionAddress: string, walletAddress: string, limit: number = 256, offset: number = 0) {
+    try {
+      // Get all NFTs owned by the wallet
+      const accountNfts = await this.client.accounts.getAccountNftItems(walletAddress, {
+        limit,
+        offset,
+      });
+
+      if (!accountNfts?.nft_items) {
+        return [];
+      }
+
+      // Filter NFTs to only include those from the specified collection
+      const collectionNfts = accountNfts.nft_items.filter(
+        nft => nft.collection?.address === collectionAddress
+      );
+
+      return collectionNfts;
+    } catch (error) {
+      // Handle API errors
+      if (error instanceof Response && typeof error.json === 'function') {
+        const errorText = await error.text();
+        console.error('API Error:', errorText);
+        throw new Error(errorText);
+      }
+
+      // Handle other types of errors
+      if (error instanceof Error) {
+        console.error('Error fetching user collection NFTs:', error.message);
+        throw error;
+      }
+
+      // Handle unknown errors
+      console.error('Unknown error fetching user collection NFTs:', error);
+      throw new Error('Failed to fetch user collection NFTs');
     }
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
@@ -8,14 +9,43 @@ import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ImageCarousel } from '@/components/ImageCarousel/ImageCarousel';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
+import { tonApiService, NftItem } from '@/core/services/TonApiService';
+import { env } from '@/core/config/env';
+import { useTonWallet } from '@tonconnect/ui-react';
 
 export default function CollectionPage() {
+  const router = useRouter();
+  const wallet = useTonWallet();
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [userNfts, setUserNfts] = useState<NftItem[]>([]);
+  
+  useEffect(() => {
+    // Redirect to main page if wallet is not connected
+    if (!wallet?.account?.address) {
+      router.push('/');
+      return;
+    }
+
+    const fetchNfts = async () => {
+      try {
+        const nfts = await tonApiService.getUserCollectionNfts(
+          env.NEXT_PUBLIC_COLLECTION_ADDRESS,
+          'EQBe9_2pyzmcrmO07Ch9tEwLWMJmCDm1UiwqmkHnPz1eqcN2'
+          //wallet.account.address
+        );
+        setUserNfts(nfts);
+      } catch (error) {
+        console.error('Error fetching NFTs:', error);
+      }
+    };
+    
+    fetchNfts();
+  }, [wallet, router]);
 
   return (
     <Page>
       <ContentWrapper>
-      <MainHeader>Sense Collection</MainHeader>
+        <MainHeader>Sense Collection</MainHeader>
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">

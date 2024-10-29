@@ -6,6 +6,7 @@ import { Wallet } from 'lucide-react';
 export const WalletComponent: React.FC = () => {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
+  console.log('wallet', wallet);
 
   const formatAddress = (address: string) => {
     if (!address) return '';

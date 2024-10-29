@@ -1,6 +1,7 @@
 import { TonApiClient } from '@ton-api/client';
 import { Address } from '@ton/core';
-// AH4UWSD7T5T4KQIAAAAHLA3IXS6LQUU6XKEED4IQBH7EWNC3C4MDRHM5D2UV6VMIN7T6YMA
+import { env } from '@/core/config/env';
+
 export class TonApiService {
     private static instance: TonApiService;
     private client: TonApiClient;
@@ -9,7 +10,7 @@ export class TonApiService {
         // TODO: Move to env
         this.client = new TonApiClient({
             baseUrl: 'https://tonapi.io',
-            apiKey: 'AFNUZOGRED4VD5YAAAACN3L5EG2NZQFUVXXEZXNNQN3XQLNLB4IVH2WGFQFDSXPCWO5XGUI'
+            apiKey: env.NEXT_PUBLIC_TONAPI_KEY,
         });
     }
 

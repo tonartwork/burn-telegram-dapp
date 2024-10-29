@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { getLocale } from 'next-intl/server';
+import { env } from '@/core/config/env';
 
 import { Root } from '@/components/Root/Root';
 import { I18nProvider } from '@/core/i18n/provider';
@@ -12,6 +13,7 @@ import './_assets/globals.css';
 export const metadata: Metadata = {
   title: 'Your Application Title Goes Here',
   description: 'Your application description goes here',
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
