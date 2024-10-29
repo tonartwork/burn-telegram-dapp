@@ -41,6 +41,7 @@ export default function CollectionPage() {
     
     fetchNfts();
   }, [wallet, router]);
+  console.log('userNfts', userNfts);
 
   return (
     <Page>
