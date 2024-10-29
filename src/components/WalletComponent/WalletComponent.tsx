@@ -2,15 +2,15 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
 import { Wallet } from 'lucide-react';
+import { Address } from '@ton/core';
 
 export const WalletComponent: React.FC = () => {
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
-  console.log('wallet', wallet);
 
   const formatAddress = (address: string) => {
     if (!address) return '';
-    return `${address.slice(0, 4)}...${address.slice(-3)}`;
+    return `${Address.parse(address).toString().slice(0, 3)}...${Address.parse(address).toString().slice(-4)}`;
   };
 
   const handleClick = () => {
