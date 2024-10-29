@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -9,39 +9,26 @@ import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ImageCarousel } from '@/components/ImageCarousel/ImageCarousel';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
-import { tonApiService, NftItem } from '@/core/services/TonApiService';
-import { env } from '@/core/config/env';
+import { NftItem } from '@/core/services/TonApiService';
 import { useTonWallet } from '@tonconnect/ui-react';
-import { Address } from '@ton/core';
+import { useNftCollection } from '@/hooks/useNftCollection';
 
 export default function CollectionPage() {
   const router = useRouter();
   const wallet = useTonWallet();
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
-  const [userNfts, setUserNfts] = useState<NftItem[]>([]);
   
-  useEffect(() => {
-    // Redirect to main page if wallet is not connected
-    if (!wallet?.account?.address) {
-      router.push('/');
-      return;
-    }
+  // TODO: use for production
+  const { nfts, isLoading, error } = useNftCollection(wallet?.account?.address);
+  //const { nfts, isLoading, error } = useNftCollection('EQBe9_2pyzmcrmO07Ch9tEwLWMJmCDm1UiwqmkHnPz1eqcN2');
   
-    const fetchNfts = async () => {
-      try {
-        const nfts = await tonApiService.getUserCollectionNfts(
-          env.NEXT_PUBLIC_COLLECTION_ADDRESS,
-          'EQBe9_2pyzmcrmO07Ch9tEwLWMJmCDm1UiwqmkHnPz1eqcN2'
-          //wallet.account.address
-        );
-        setUserNfts(nfts);
-      } catch (error) {
-        console.error('Error fetching NFTs:', error);
-      }
-    };
-    
-    fetchNfts();
-  }, [wallet, router]);
+  console.log('nfts', nfts);
+
+  // Redirect to main page if wallet is not connected
+  if (!wallet?.account?.address) {
+    router.push('/');
+    return null;
+  }
 
   return (
     <Page>
@@ -51,9 +38,10 @@ export default function CollectionPage() {
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
             <ImageCarousel 
-              items={userNfts}
+              items={nfts}
               onSelect={setSelectedNft}
               selectedAddress={selectedNft?.address || null}
+              isLoading={isLoading}
             />
           </CardContent>
           <CardFooter>
