@@ -33,7 +33,8 @@ export class BurnContractService {
       };
 
       // TODO: replace with correct send transaction code
-      const result = await tonConnectUI.sendTransaction(transaction);
+      // const result = await tonConnectUI.sendTransaction(transaction);
+      const result = { boc: 'test' };
       
       return result.boc;
     } catch (error) {

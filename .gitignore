@@ -40,4 +40,5 @@ next-env.d.ts
 certificates
 
 .env
+.env.production
 .env*.local

@@ -1,21 +1,15 @@
-//use server is required
-"use server";
-
-import { cookies } from "next/headers";
+"use client";
 
 import { defaultLocale } from "./config";
 import type { Locale } from "./types";
 
-// In this example the locale is read from a cookie. You could alternatively
-// also read it from a database, backend service, or any other source.
 const COOKIE_NAME = "NEXT_LOCALE";
 
-const getLocale = async () => {
-  return cookies().get(COOKIE_NAME)?.value || defaultLocale;
+export const getLocale = (): string => {
+  if (typeof window === 'undefined') return defaultLocale;
+  return localStorage.getItem(COOKIE_NAME) || defaultLocale;
 };
 
-const setLocale = async (locale?: string) => {
-  cookies().set(COOKIE_NAME, locale as Locale || defaultLocale);
+export const setLocale = (locale?: string): void => {
+  localStorage.setItem(COOKIE_NAME, locale as Locale || defaultLocale);
 };
-
-export { getLocale, setLocale };

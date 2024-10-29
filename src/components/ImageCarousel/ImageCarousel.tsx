@@ -32,7 +32,7 @@ const EmptyState = () => (
   <div className="flex flex-col items-center justify-center py-8 px-6 text-center mb-12">
     <div className="text-gray-400 mb-2">No NFTs Found</div>
     <p className="text-sm text-gray-500">
-      You don't have any NFTs from this collection yet
+      {`You don't have any NFTs from this collection yet`}
     </p>
   </div>
 );
