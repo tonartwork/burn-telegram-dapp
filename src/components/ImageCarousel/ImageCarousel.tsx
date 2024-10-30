@@ -57,7 +57,7 @@ const ImageGrid = ({
           key={item.address} 
           className={cn(
             "relative cursor-pointer transition-all duration-200 hover:opacity-80",
-            selectedAddress === item.address && "ring-2 ring-green-500 opacity-70"
+            selectedAddress === item.address && "ring-2 ring-green-500 opacity-70 rounded-xl"
           )}
           onClick={() => onSelect(item)}
         >
