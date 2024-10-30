@@ -32,7 +32,7 @@ export const WalletComponent: React.FC = () => {
       >
         <CardContent className="flex items-center gap-2 p-2">
           {wallet?.account?.address ? (
-            <span className="font-semibold text-sm text-gray-700 flex items-center gap-2">
+            <span className="font-semibold text-sm text-gray-700 flex items-center gap-2" id={wallet.account.address}>
               {formatAddress(wallet.account.address)}
               <Wallet size={20} className="text-gray-300" />
             </span>
