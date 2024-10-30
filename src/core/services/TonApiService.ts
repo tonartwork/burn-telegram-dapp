@@ -161,23 +161,13 @@ export class TonApiService {
    */
   public async getUserCollectionNfts(collectionAddress: string, walletAddress: string, limit: number = 256, offset: number = 0) {
     try {
-      // Get all NFTs owned by the wallet
-      const accountNfts = await this.client.accounts.getAccountNftItems(walletAddress, {
+      console.log('Fetching user collection NFTs:', collectionAddress, walletAddress);
+      const collectionNfts = await this.client.accounts.getAccountNftItems(walletAddress, {
         limit,
         offset,
-      });
-
-      console.log('accountNfts', accountNfts);
-
-      if (!accountNfts?.nft_items) {
-        return [];
-      }
-
-      // Filter NFTs to only include those from the specified collection
-      const collectionNfts = accountNfts.nft_items.filter(
-        nft => nft.collection?.address === Address.parse(collectionAddress).toRawString()
-      );
-
+        collection: collectionAddress,
+      }).then( (res) => res.nft_items);
+      console.log('collectionNfts', collectionNfts);
       return collectionNfts;
     } catch (error) {
       // Handle API errors
