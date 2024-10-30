@@ -30,7 +30,7 @@ export function Page({ children, back = true, className, ...props }: PropsWithCh
   }, [router]);
 
   return (
-    <div className={cn('min-h-screen', className)} {...props}>
+    <div className={cn('min-h-screen', 'bg-white', className)} {...props}>
       {children}
     </div>
   );
