@@ -8,8 +8,8 @@ import 'normalize.css/normalize.css';
 import './_assets/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Your Application Title Goes Here',
-  description: 'Your application description goes here',
+  title: 'Sense x Guardians',
+  description: 'Sense x Guardians burn event', 
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 };
 
