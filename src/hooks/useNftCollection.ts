@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { tonApiService, NftItem } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
+import { Address } from '@ton/core';
 
-export const useNftCollection = (walletAddress: string | undefined) => {
+export const useNftCollection = (walletAddress: Address | null) => {
   const [nfts, setNfts] = useState<NftItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -18,7 +19,7 @@ export const useNftCollection = (walletAddress: string | undefined) => {
         setIsLoading(true);
         const fetchedNfts = await tonApiService.getUserCollectionNfts(
           env.NEXT_PUBLIC_COLLECTION_ADDRESS,
-          walletAddress
+          'EQCYNdc2ZjZJ7PDL_l5Yslar4pZzz0ayKeBUJTDSbzAlek1q'.toString(),
         );
         setNfts(fetchedNfts);
       } catch (err) {

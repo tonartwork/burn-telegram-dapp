@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +14,7 @@ import { useTonWallet } from '@tonconnect/ui-react';
 import { useNftCollection } from '@/hooks/useNftCollection';
 import { useBurnNft } from '@/hooks/useBurnNft';
 import { useTonConnectUI } from '@tonconnect/ui-react';
+import { Address } from '@ton/core';
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -21,17 +22,18 @@ export default function CollectionPage() {
   const [tonConnectUI] = useTonConnectUI();
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
+  const [walletAddress, setWalletAddress] = useState<Address | null>(null);
   const { isBurning, burnNft, error } = useBurnNft();
-  
-  // TODO: use for production
-  // const { nfts, isLoading, error } = useNftCollection(wallet?.account?.address);
-  const { nfts, isLoading } = useNftCollection('EQBe9_2pyzmcrmO07Ch9tEwLWMJmCDm1UiwqmkHnPz1eqcN2');
-
-  // Redirect to main page if wallet is not connected
-  if (!wallet?.account?.address) {
-    router.push('/');
-    return null;
-  }
+  useEffect(() => {
+    if (wallet?.account?.address) {
+      setWalletAddress(Address.parse(wallet?.account?.address));
+    } else {
+      setWalletAddress(null);
+      router.push('/');
+    }
+  }, [wallet, wallet?.account?.address]);
+  const { nfts, isLoading } = useNftCollection(walletAddress);
+  console.log('nfts, loading', nfts, isLoading);
 
   const handleBurnNft = async () => {
     if (!selectedNft) return;
@@ -47,7 +49,7 @@ export default function CollectionPage() {
   return (
     <Page>
       <ContentWrapper>
-        <MainHeader>Sense Collection</MainHeader>
+        <MainHeader>Sense x Guardians Collection</MainHeader>
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
