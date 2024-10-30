@@ -3,9 +3,10 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Wallet } from 'lucide-react';
 import { Address } from '@ton/core';
 import { useTonConnect } from '@/hooks/useTonConnect';
+import { cn } from '@/lib/utils';
 
 export const WalletComponent: React.FC = () => {
-  const { connected, wallet, ui: tonConnectUI} = useTonConnect();
+  const { connected, wallet, ui: tonConnectUI, networkType} = useTonConnect();
 
   const formatAddress = (address: string) => {
     if (!address) return '';
@@ -23,10 +24,12 @@ export const WalletComponent: React.FC = () => {
   
   };
 
+  const borderColor = networkType === 'mainnet' ? 'border-gray-300 ' : 'border-red-500';
+
   return (
     <div className="flex justify-center mb-4">
       <Card 
-        className="bg-white border border-gray-300 rounded-full cursor-pointer w-32 h-10 flex items-center justify-center"
+        className={cn("bg-white border rounded-full cursor-pointer w-32 h-10 flex items-center justify-center", borderColor)}
         onClick={handleClick}
       >
         <CardContent className="flex items-center gap-2 p-2">

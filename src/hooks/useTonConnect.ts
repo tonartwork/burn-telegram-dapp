@@ -3,15 +3,21 @@ import { Address } from "@ton/core";
 import { SenderArguments } from "@ton/core";
 import { Sender } from "@ton/core";
 
+type networkType = 'mainnet' | 'testnet' | null;
 export function useTonConnect(): {
     sender: Sender;
     connected: boolean;
     wallet: Address | null;
     network: CHAIN | null;
     ui: TonConnectUI;
+    networkType: networkType;
 } {
     const [tonConnectUI] = useTonConnectUI()
     const wallet = useTonWallet()
+    const network = wallet?.account.chain ?? null;
+    let networkType = null;
+    if (network) networkType = (network === CHAIN.MAINNET ? "mainnet" : "testnet") as networkType;
+
     return {
         sender: {
             send: async (args: SenderArguments) => {
@@ -31,7 +37,7 @@ export function useTonConnect(): {
         connected: !!wallet?.account.address,
         wallet: wallet?.account.address ?  Address.parse(wallet?.account?.address as string) : null,
         network: wallet?.account.chain ?? null,
-        ui: tonConnectUI
-        
+        ui: tonConnectUI,
+        networkType
     }
 }
