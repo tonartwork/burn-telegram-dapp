@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <Page back={false}>
-      <ContentWrapper className="!px-0  !max-w-sm">
+      <ContentWrapper className="!px-0 !max-w-sm">
         <div className="px-4">
           <MainHeader>Sense</MainHeader>
           {wallet && <WalletComponent />}
@@ -57,7 +57,7 @@ export default function Home() {
         </Card>
         <div className="px-4">
           <p className="text-center text-sm text-gray-600 mb-8">
-            {wallet ? 'Mint and Burn NFTs' : 'Connect your wallet to participate in the event'}
+            {wallet ? 'Select NFTs to burn' : 'Connect your wallet to participate in the event'}
           </p>
         </div>
       </ContentWrapper>
