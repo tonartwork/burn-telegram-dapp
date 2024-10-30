@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -10,31 +10,25 @@ import { ImageCarousel } from '@/components/ImageCarousel/ImageCarousel';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { NftItem } from '@/core/services/TonApiService';
-import { useTonWallet } from '@tonconnect/ui-react';
 import { useNftCollection } from '@/hooks/useNftCollection';
 import { useBurnNft } from '@/hooks/useBurnNft';
-import { useTonConnectUI } from '@tonconnect/ui-react';
-import { Address } from '@ton/core';
+import { useTonConnect } from '@/hooks/useTonConnect';
 
 export default function CollectionPage() {
   const router = useRouter();
-  const wallet = useTonWallet();
-  const [tonConnectUI] = useTonConnectUI();
+  const { connected, wallet } = useTonConnect();
+  const walletAddress = wallet?.toString() ?? null;
+  console.log('connected, wallet', connected, wallet);
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
-  const [walletAddress, setWalletAddress] = useState<Address | null>(null);
   const { isBurning, burnNft, error } = useBurnNft();
   useEffect(() => {
-    if (wallet?.account?.address) {
-      setWalletAddress(Address.parse(wallet?.account?.address));
-    } else {
-      setWalletAddress(null);
+    if (!connected) {
       router.push('/');
     }
-  }, [wallet, wallet?.account?.address]);
+  }, [connected]);
   const { nfts, isLoading } = useNftCollection(walletAddress);
   console.log('nfts, loading', nfts, isLoading);
-
   const handleBurnNft = async () => {
     if (!selectedNft) return;
 
@@ -49,7 +43,7 @@ export default function CollectionPage() {
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
-        <MainHeader>Sense x Guardians Collection</MainHeader>
+        <MainHeader>Sense x Guardians <br/> Collection </MainHeader>
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">

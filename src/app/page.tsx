@@ -5,17 +5,16 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
-import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
 import nftPreviews from '@/lib/nftPreviews';
+import { useTonConnect } from '@/hooks/useTonConnect';
 
 export default function Home() {
-  const wallet = useTonWallet();
-  const [tonConnectUI] = useTonConnectUI();
-  const [nftImages, setNftImages] = useState<string[]>([]);
+  const { connected, wallet, ui: tonConnectUI} = useTonConnect();
+  const [nftImages, _setNftImages] = useState<string[]>([]);
 
   return (
     <Page back={false}>
@@ -38,7 +37,7 @@ export default function Home() {
               <CardDescription className="text-gray-600">burn NFTs from the hacked collection</CardDescription>
             </CardHeader>
             <CardFooter>
-              {wallet ? (
+              {connected ? (
                 <Link href="/collection" className="w-full">
                   <Button className="w-full bg-black text-white hover:bg-gray-800">
                     View Collection
