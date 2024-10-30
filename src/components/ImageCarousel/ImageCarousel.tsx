@@ -81,7 +81,6 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   selectedAddress,
   isLoading = false
 }) => {
-  console.log('items', items);
   if (isLoading) {
     return <LoadingGrid />;
   }

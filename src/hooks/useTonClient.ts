@@ -10,7 +10,6 @@ export function useTonClient() {
     const {network} = useTonConnect()
     const apiKey = network === CHAIN.MAINNET ? env.NEXT_PUBLIC_TONCENTER_MAINNET_KEY : env.NEXT_PUBLIC_TONCENTER_TESTNET_KEY;
     
-    console.log('network', network);
     return {
         client: useAsyncInitialize(async ()=>{
             if(!network) return;

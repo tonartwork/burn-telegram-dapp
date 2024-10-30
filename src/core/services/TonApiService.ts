@@ -161,13 +161,11 @@ export class TonApiService {
    */
   public async getUserCollectionNfts(collectionAddress: string, walletAddress: string, limit: number = 256, offset: number = 0) {
     try {
-      console.log('Fetching user collection NFTs:', collectionAddress, walletAddress);
       const collectionNfts = await this.client.accounts.getAccountNftItems(walletAddress, {
         limit,
         offset,
         collection: collectionAddress,
       }).then( (res) => res.nft_items);
-      console.log('collectionNfts', collectionNfts);
       return collectionNfts;
     } catch (error) {
       // Handle API errors
