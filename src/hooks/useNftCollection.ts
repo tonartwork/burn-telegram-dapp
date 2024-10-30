@@ -3,7 +3,7 @@ import { tonApiService, NftItem } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
 import { Address } from '@ton/core';
 
-export const useNftCollection = (walletAddress: Address | null) => {
+export const useNftCollection = (walletAddress: string | null) => {
   const [nfts, setNfts] = useState<NftItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
