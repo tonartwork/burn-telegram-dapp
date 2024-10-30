@@ -14,7 +14,14 @@ export const WalletComponent: React.FC = () => {
   };
 
   const handleClick = () => {
-    tonConnectUI.openModal();
+    if (!wallet?.account?.address) {
+      tonConnectUI.openModal();
+    } else {
+      if (window.confirm('Are you sure you want to sign out?')) {
+        tonConnectUI.disconnect();
+      }
+    }
+  
   };
 
   return (
