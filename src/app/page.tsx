@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <Page back={false}>
-      <ContentWrapper className="!px-0">
+      <ContentWrapper className="!px-0  !max-w-sm">
         <div className="px-4">
           <MainHeader>Sense</MainHeader>
           {wallet && <WalletComponent />}
@@ -34,8 +34,8 @@ export default function Home() {
           />
           <div className="px-4">
             <CardHeader className="mb-12 text-center">
-              <CardTitle className="text-xl font-bold">Guardiance by Seedorova</CardTitle>
-              <CardDescription className="text-gray-600">1,024 unique art-objects</CardDescription>
+              <CardTitle className="text-xl font-bold">Guardians by Seedorova</CardTitle>
+              <CardDescription className="text-gray-600">burn NFTs from the hacked collection</CardDescription>
             </CardHeader>
             <CardFooter>
               {wallet ? (
@@ -57,7 +57,7 @@ export default function Home() {
         </Card>
         <div className="px-4">
           <p className="text-center text-sm text-gray-600 mb-8">
-            {wallet ? 'Mint and Burn NFTs' : 'Connect your wallet to buy and mint NFT'}
+            {wallet ? 'Mint and Burn NFTs' : 'Connect your wallet to participate in the event'}
           </p>
         </div>
       </ContentWrapper>
