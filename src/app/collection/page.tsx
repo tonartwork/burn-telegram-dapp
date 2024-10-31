@@ -38,7 +38,7 @@ export default function CollectionPage() {
     if (!connected) {
       router.push('/');
     }
-  }, [connected, router]);
+  }, [connected]);
   const { nfts, isLoading: isCollectionLoading, refetch } = useNftCollection(walletAddress);
   const handleBurnNft = async () => {
     try {
