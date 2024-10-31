@@ -39,8 +39,19 @@ export function useJettonContract() {
   const { state: jettonMasterProvider, error: jettonMasterError } = useAsyncInitialize(
     async () => {
       if (!client) throw new Error('No client available');
-      const jettonMaster = JettonMaster.create(jettonAddress);
-      return client.open(jettonMaster);
+      try {
+        const jettonMaster = JettonMaster.create(jettonAddress);
+        const provider = client.open(jettonMaster);
+        // Test if contract is initialized
+        await provider.getJettonData();
+        return provider;
+      } catch (err) {
+        if (err instanceof Error && err.message.includes('exit_code: -13')) {
+          // Contract exists but not initialized
+          return null;
+        }
+        throw err;
+      }
     },
     [client, jettonAddress]
   );
@@ -54,14 +65,10 @@ export function useJettonContract() {
   const { state: jettonWalletProvider, error: jettonWalletError } = useAsyncInitialize(
     async () => {
       if (!jettonMasterProvider || !wallet || !client) throw new Error('Missing dependencies');
-      try {
-        const jettonWalletAddress = await jettonMasterProvider.getWalletAddress(wallet);
-        const jettonWallet = JettonWallet.create(jettonWalletAddress);
-        return client.open(jettonWallet);
-      } catch (err) {
-        console.error("Error fetching wallet data:", err);
-        throw err instanceof Error ? err : new Error('Failed to fetch jetton wallet');
-      }
+      
+      const jettonWalletAddress = await jettonMasterProvider.getWalletAddress(wallet);
+      const jettonWallet = JettonWallet.create(jettonWalletAddress);
+      return client.open(jettonWallet);
     },
     [jettonMasterProvider, wallet, client]
   );
@@ -73,7 +80,12 @@ export function useJettonContract() {
 
   // Fetch Jetton on-chain data
   useEffect(() => {
-    if (!jettonMasterProvider) return;
+    if (!jettonMasterProvider) {
+      // Handle uninitialized contract case
+      setTokenData(null);
+      setMasterError(null);
+      return;
+    }
 
     let isMounted = true;
 
@@ -81,9 +93,7 @@ export function useJettonContract() {
       setIsLoading(true);
       try {
         const jettonData = await jettonMasterProvider.getJettonData();
-        // console.log('jettonData', jettonData);
         const meta = decodeOnchainMetadata(jettonData.content) as JettonOnchainMetadata;
-        // console.log('meta', meta);
 
         if (isMounted) {
           setTokenData({
@@ -97,7 +107,13 @@ export function useJettonContract() {
         console.error("Error fetching jetton data:", err);
         if (isMounted) {
           const error = err instanceof Error ? err : new Error('Failed to fetch jetton data');
-          setMasterError(error);
+          if (error.message.includes('exit_code: -13')) {
+            // Handle uninitialized contract
+            setTokenData(null);
+            setMasterError(null);
+          } else {
+            setMasterError(error);
+          }
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -121,20 +137,19 @@ export function useJettonContract() {
       setIsLoading(true);
       try {
         const jettonBalance = await jettonWalletProvider.getBalance();
-        // console.log('jettonBalance', jettonBalance);
         if (isMounted) {
           setBalance(fromNano(jettonBalance));
           setWalletError(null);
         }
       } catch (err) {
-        console.error("Error fetching balance:", err);
         if (isMounted) {
           const error = err instanceof Error ? err : new Error('Failed to fetch jetton balance');
           if (error.message.includes('exit_code: -13')) {
-            // console.log('Jetton wallet is not activated, code: -13');
             setBalance('0');
+            setWalletError(null);
           } else {
             setWalletError(error);
+            console.error("Error fetching balance:", err);
           }
         }
       } finally {
