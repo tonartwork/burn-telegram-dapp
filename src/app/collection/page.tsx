@@ -34,6 +34,9 @@ export default function CollectionPage() {
 
   const { selectNftItem, burnNft, isContractReady } = useNftItemContract();
 
+  // Add this state to track burning NFTs
+  const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     if (!connected) {
       router.push('/');
@@ -49,15 +52,23 @@ export default function CollectionPage() {
 
   // Memoize the handleBurnNft callback
   const handleBurnNft = useCallback(async () => {
+    if (!selectedNft) return;
+    
     try {
-      const burn = await burnNft();
-      console.log('burn success', burn);
+      setBurningNfts(prev => new Set(prev).add(selectedNft.address));
+      // const burn = await burnNft();
+      // console.log('burn success', burn);
       selectNft(null);
-      refetch();
+      refetch(); 
     } catch (error) {
       alert('Failed to burn NFT. Please try again.');
+      setBurningNfts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(selectedNft.address);
+        return newSet;
+      });
     }
-  }, [burnNft, selectNft, refetch]);
+  }, [burnNft, selectNft, refetch, selectedNft]);
 
   const error = walletError || masterError || null;
   const jettonMeta = tokenData?.content || { symbol: '', description: '' };
@@ -76,6 +87,7 @@ export default function CollectionPage() {
               onSelect={selectNft}
               selectedAddress={selectedNft?.address || null}
               isLoading={isCollectionLoading}
+              burningNfts={burningNfts}
             />
           </CardContent>
           <CardFooter>
