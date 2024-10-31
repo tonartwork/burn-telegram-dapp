@@ -11,15 +11,15 @@
   },
   "dependencies": {
     "@next/env": "^15.0.1",
+    "@orbs-network/ton-access": "^2.2.2",
     "@radix-ui/react-icons": "^1.3.0",
     "@telegram-apps/sdk-react": "^2.0.5",
     "@telegram-apps/telegram-ui": "^2.1.5",
-    "@tonconnect/ui-react": "^2.0.9",
     "@ton-api/client": "^0.2.0",
     "@ton-api/ton-adapter": "^0.2.0",
     "@ton/core": "^0.59.0",
     "@ton/ton": "^15.1.0",
-    "@orbs-network/ton-access": "^2.2.2",
+    "@tonconnect/ui-react": "^2.0.9",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -33,7 +33,8 @@
     "react-dom": "^18",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "tonapi-sdk-js": "^2.0.3"
+    "tonapi-sdk-js": "^2.0.3",
+    "tonweb": "^0.0.66"
   },
   "devDependencies": {
     "@types/node": "^20",
