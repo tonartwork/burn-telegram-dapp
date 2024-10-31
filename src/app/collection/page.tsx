@@ -14,6 +14,7 @@ import { useNftCollection } from '@/hooks/useNftCollection';
 import { useJettonContract } from "@/hooks/useJettonContract";
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
+import { repeat } from '@/utils/repeat';
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -56,10 +57,25 @@ export default function CollectionPage() {
     
     try {
       setBurningNfts(prev => new Set(prev).add(selectedNft.address));
-      // const burn = await burnNft();
-      // console.log('burn success', burn);
+      
+      // First burn the NFT (only once)
+      await burnNft();
       selectNft(null);
-      refetch(); 
+
+      // Then start polling with refetch every 5 seconds
+      const stopRepeat = repeat(async () => {
+        await refetch();
+      }, 5000);
+
+      // Stop repeating after 2 minutes
+      setTimeout(() => {
+        stopRepeat();
+        setBurningNfts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(selectedNft.address);
+          return newSet;
+        });
+      }, 120000); // 2 minutes
     } catch (error) {
       alert('Failed to burn NFT. Please try again.');
       setBurningNfts(prev => {
