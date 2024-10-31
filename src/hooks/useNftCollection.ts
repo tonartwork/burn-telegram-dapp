@@ -30,7 +30,7 @@ export const useNftCollection = (walletAddress: string | null) => {
 
   useEffect(() => {
     fetchNfts();
-  }, [walletAddress, fetchNfts]);
+  }, [walletAddress]);
 
   return { nfts, isLoading, error, refetch: fetchNfts };
 };
