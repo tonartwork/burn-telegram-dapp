@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Address, fromNano } from "@ton/core";
 import { JettonMaster, JettonWallet } from "@ton/ton";
 import { useAsyncInitialize } from "@/hooks/useAsyncInitialize";
@@ -15,24 +15,26 @@ type TokenData = {
 export function useJettonContract() {
   const { client } = useTonClient();
   const { wallet } = useTonConnect();
+
   const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [balance, setBalance] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [masterError, setMasterError] = useState<Error | null>(null);
   const [walletError, setWalletError] = useState<Error | null>(null);
 
-  // Memoize getJettonMasterProvider function
-  const getJettonMasterProvider = useCallback(async () => {
-    if (!client) throw new Error('No client available');
-    const jettonAddress = Address.parse(env.NEXT_PUBLIC_JETTON_ADDRESS);
-    const jettonMaster = JettonMaster.create(jettonAddress);
-    return client.open(jettonMaster);
-  }, [client]);
+  // Memoize jettonAddress
+  const jettonAddress = useMemo(() => {
+    return Address.parse(env.NEXT_PUBLIC_JETTON_ADDRESS);
+  }, []);
 
   // Initialize jettonMasterProvider
   const { state: jettonMasterProvider, error: jettonMasterError } = useAsyncInitialize(
-    getJettonMasterProvider,
-    [getJettonMasterProvider]
+    async () => {
+      if (!client) throw new Error('No client available');
+      const jettonMaster = JettonMaster.create(jettonAddress);
+      return client.open(jettonMaster);
+    },
+    [client, jettonAddress]
   );
 
   // Handle master provider errors
