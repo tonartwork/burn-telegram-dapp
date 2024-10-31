@@ -1,36 +1,30 @@
-import { CHAIN, TonConnectUI, useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
-import { Address, SenderArguments, Sender } from "@ton/core";
-import { useMemo, useCallback } from 'react';
+import { CHAIN, useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
+import { Address, SenderArguments} from "@ton/core";
+import { useMemo, useCallback, useState } from 'react';
 
 type NetworkType = 'mainnet' | 'testnet' | null;
 
-export function useTonConnect(): {
-  sender: Sender;
-  connected: boolean;
-  wallet: Address | null;
-  network: CHAIN | null;
-  ui: TonConnectUI;
-  networkType: NetworkType;
-} {
+const TRANSACTION_TIMEOUT_MINUTES = 5;
+const MS_IN_MINUTE = 60 * 1000;
+
+export function useTonConnect() {
   const [tonConnectUI] = useTonConnectUI();
   const wallet = useTonWallet();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const network = useMemo(() => wallet?.account.chain ?? null, [wallet?.account.chain]);
+  const network = wallet?.account.chain ?? null;
 
-  const networkType: NetworkType = useMemo(() => {
-    if (network) return network === CHAIN.MAINNET ? "mainnet" : "testnet";
-    return null;
-  }, [network]);
+  const networkType: NetworkType = network ? (network === CHAIN.MAINNET ? "mainnet" : "testnet") : null;
 
   const memoizedWallet = useMemo(() => {
-    return wallet?.account.address
-      ? Address.parse(wallet.account.address as string)
-      : null;
+    if (!wallet?.account.address) return null;
+    return Address.parse(wallet.account.address);
   }, [wallet?.account.address]);
 
-  const sender = useMemo(() => {
-    const send = async (args: SenderArguments) => {
-      tonConnectUI.sendTransaction({
+  const sendTransaction = useCallback(async (args: SenderArguments) => {
+    setIsLoading(true);
+    try {
+      await tonConnectUI.sendTransaction({
         messages: [
           {
             address: args.to.toString(),
@@ -38,16 +32,24 @@ export function useTonConnect(): {
             payload: args.body?.toBoc().toString("base64"),
           },
         ],
-        validUntil: Date.now() + 5 * 60 * 1000, // 5 minutes for user to approve
+        // 5 minutes for user to approve
+        validUntil: Date.now() + TRANSACTION_TIMEOUT_MINUTES * MS_IN_MINUTE, 
       });
-    };
-    return {
-      send,
-      address: memoizedWallet ?? undefined,
-    };
-  }, [tonConnectUI, memoizedWallet]);
+    } catch (error) {
+      //TODO: Use Sentry or other error handling
+      console.error('Transaction failed:', error);
+      throw error; // Re-throw to let consumers handle errors
+    } finally {
+      setIsLoading(false);
+    }
+  }, [tonConnectUI]);
 
-  const connected = useMemo(() => !!wallet?.account.address, [wallet?.account.address]);
+  const sender = useMemo(() => ({
+    send: sendTransaction,
+    address: memoizedWallet ?? undefined,
+  }), [sendTransaction, memoizedWallet]);
+
+  const connected = !!wallet?.account.address;
 
   return {
     sender,
@@ -56,5 +58,6 @@ export function useTonConnect(): {
     network,
     ui: tonConnectUI,
     networkType,
+    isLoading,
   };
 }
