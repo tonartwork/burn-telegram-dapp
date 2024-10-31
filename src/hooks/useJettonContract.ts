@@ -5,10 +5,18 @@ import { useAsyncInitialize } from "@/hooks/useAsyncInitialize";
 import { useTonClient } from "@/hooks/useTonClient";
 import { useTonConnect } from "@/hooks/useTonConnect";
 import { env } from '@/core/config/env';
+import { decodeOnchainMetadata } from "@/lib/jettonHelper";
+
+type JettonOnchainMetadata = {
+  name: string;
+  description: string;
+  symbol: string;
+  image: string;
+};
 
 type TokenData = {
   totalSupply: string | null;
-  content: string | null;
+  content: JettonOnchainMetadata | null;
   mintable: boolean;
 };
 
@@ -74,11 +82,14 @@ export function useJettonContract() {
       try {
         const jettonData = await jettonMasterProvider.getJettonData();
         console.log('jettonData', jettonData);
+        const meta = decodeOnchainMetadata(jettonData.content) as JettonOnchainMetadata;
+        console.log('meta', meta);
+
         if (isMounted) {
           setTokenData({
             mintable: jettonData.mintable,
             totalSupply: fromNano(jettonData.totalSupply),
-            content: 'SENSE',
+            content: meta
           });
           setMasterError(null);
         }

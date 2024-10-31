@@ -22,9 +22,10 @@ export default function CollectionPage() {
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
   const { 
     balance,
-    content,
-    isLoading: isBalanceLoading,
-    error: jettonError,
+    isLoading,
+    masterError,
+    walletError,
+    tokenData
   } = useJettonContract();
 
   const isBurning = false;
@@ -45,7 +46,8 @@ export default function CollectionPage() {
     }
   };
 
-  const error = jettonError || null;
+  const error = walletError || masterError || null;
+  const jettonMeta = tokenData?.content || { symbol: '', description: '' };
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -76,10 +78,10 @@ export default function CollectionPage() {
           </p>
         )}
         <p className="text-center text-sm text-gray-400 mb-2 px-10">
-          Each burned NFT from hacked collection will bring you 1 SENSE jetton
+          You have { balance } { jettonMeta.symbol }
         </p>
         <p className="text-center text-sm text-gray-400 px-8">
-          { balance } Jettons can be used in the next SENSE drops { content}
+          { jettonMeta.description }
         </p>
       </ContentWrapper>
     </Page>
