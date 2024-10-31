@@ -13,6 +13,7 @@ import { NftItem } from '@/core/services/TonApiService';
 import { useNftCollection } from '@/hooks/useNftCollection';
 import { useJettonContract } from "@/hooks/useJettonContract";
 import { useTonConnect } from '@/hooks/useTonConnect';
+import { useNftItemContract } from '@/hooks/useNftItemContract';
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function CollectionPage() {
   const walletAddress = wallet?.toString() ?? null;
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
+
+
   const { 
     balance,
     isLoading,
@@ -28,22 +31,29 @@ export default function CollectionPage() {
     tokenData
   } = useJettonContract();
 
+  const { selectNftItem, burnNft, isContractReady } = useNftItemContract();
+
   const isBurning = false;
   useEffect(() => {
     if (!connected) {
       router.push('/');
     }
   }, [connected]);
-  const { nfts, isLoading: isCollectionLoading } = useNftCollection(walletAddress);
+  const { nfts, isLoading: isCollectionLoading, refetch } = useNftCollection(walletAddress);
   const handleBurnNft = async () => {
-    if (!selectedNft) return;
-
     try {
-      // await burnNft(selectedNft);
-      setSelectedNft(null);
+      const burn = await burnNft();
+      console.log('burn success', burn);
+      selectNft(null);
+      refetch();
     } catch (error) {
       alert('Failed to burn NFT. Please try again.');
     }
+  };
+
+  const selectNft = (nft: NftItem | null) => {
+    setSelectedNft(nft);
+    selectNftItem(nft);
   };
 
   const error = walletError || masterError || null;
@@ -57,7 +67,7 @@ export default function CollectionPage() {
           <CardContent className="pt-6">
             <ImageCarousel 
               items={nfts}
-              onSelect={setSelectedNft}
+              onSelect={selectNft}
               selectedAddress={selectedNft?.address || null}
               isLoading={isCollectionLoading}
             />
@@ -65,7 +75,7 @@ export default function CollectionPage() {
           <CardFooter>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={!selectedNft || isBurning}
+              disabled={!selectedNft || !isContractReady || isBurning}
               onClick={handleBurnNft}
             >
               {isBurning ? 'Burning...' : 'Burn NFT'}
