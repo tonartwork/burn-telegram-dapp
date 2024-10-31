@@ -42,3 +42,5 @@ certificates
 .env
 .env.production
 .env*.local
+# Sentry Config File
+.env.sentry-build-plugin
