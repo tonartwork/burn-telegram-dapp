@@ -13,7 +13,7 @@ export class TonApiService {
   private constructor() {
     const apiKey = env.NEXT_PUBLIC_TONAPI_KEY;
     const httpClient = new HttpClient({
-      baseUrl: 'https://tonapi.io',
+      baseUrl: 'https://testnet.tonapi.io',
       baseApiParams: {
         headers: {
           Authorization: `Bearer ${apiKey}`,
