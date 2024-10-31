@@ -81,9 +81,9 @@ export function useJettonContract() {
       setIsLoading(true);
       try {
         const jettonData = await jettonMasterProvider.getJettonData();
-        console.log('jettonData', jettonData);
+        // console.log('jettonData', jettonData);
         const meta = decodeOnchainMetadata(jettonData.content) as JettonOnchainMetadata;
-        console.log('meta', meta);
+        // console.log('meta', meta);
 
         if (isMounted) {
           setTokenData({
@@ -121,7 +121,7 @@ export function useJettonContract() {
       setIsLoading(true);
       try {
         const jettonBalance = await jettonWalletProvider.getBalance();
-        console.log('jettonBalance', jettonBalance);
+        // console.log('jettonBalance', jettonBalance);
         if (isMounted) {
           setBalance(fromNano(jettonBalance));
           setWalletError(null);
@@ -131,7 +131,7 @@ export function useJettonContract() {
         if (isMounted) {
           const error = err instanceof Error ? err : new Error('Failed to fetch jetton balance');
           if (error.message.includes('exit_code: -13')) {
-            console.log('Jetton wallet is not activated, code: -13');
+            // console.log('Jetton wallet is not activated, code: -13');
             setBalance('0');
           } else {
             setWalletError(error);
