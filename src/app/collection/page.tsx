@@ -11,35 +11,41 @@ import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { NftItem } from '@/core/services/TonApiService';
 import { useNftCollection } from '@/hooks/useNftCollection';
-import { useBurnNft } from '@/hooks/useBurnNft';
+import { useJettonContract } from "@/hooks/useJettonContract";
 import { useTonConnect } from '@/hooks/useTonConnect';
 
 export default function CollectionPage() {
   const router = useRouter();
   const { connected, wallet } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
-  console.log('connected, wallet', connected, wallet);
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
-  const { isBurning, burnNft, error } = useBurnNft();
+  const { 
+    balance,
+    content,
+    isLoading: isBalanceLoading,
+    error: jettonError,
+  } = useJettonContract();
+
+  const isBurning = false;
   useEffect(() => {
     if (!connected) {
       router.push('/');
     }
   }, [connected]);
-  const { nfts, isLoading } = useNftCollection(walletAddress);
-  console.log('nfts, loading', nfts, isLoading);
+  const { nfts, isLoading: isCollectionLoading } = useNftCollection(walletAddress);
   const handleBurnNft = async () => {
     if (!selectedNft) return;
 
     try {
-      await burnNft(selectedNft);
+      // await burnNft(selectedNft);
       setSelectedNft(null);
     } catch (error) {
       alert('Failed to burn NFT. Please try again.');
     }
   };
 
+  const error = jettonError || null;
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -51,7 +57,7 @@ export default function CollectionPage() {
               items={nfts}
               onSelect={setSelectedNft}
               selectedAddress={selectedNft?.address || null}
-              isLoading={isLoading}
+              isLoading={isCollectionLoading}
             />
           </CardContent>
           <CardFooter>
@@ -73,7 +79,7 @@ export default function CollectionPage() {
           Each burned NFT from hacked collection will bring you 1 SENSE jetton
         </p>
         <p className="text-center text-sm text-gray-400 px-8">
-          Jettons can be used in the next SENSE drops
+          { balance } Jettons can be used in the next SENSE drops { content}
         </p>
       </ContentWrapper>
     </Page>
