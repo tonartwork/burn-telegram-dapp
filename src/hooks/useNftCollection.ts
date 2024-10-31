@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { tonApiService, NftItem } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
 
@@ -7,8 +7,7 @@ export const useNftCollection = (walletAddress: string | null) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-
-  const fetchNfts = async () => {
+  const fetchNfts = useCallback(async () => {
     if (!walletAddress) {
       setIsLoading(false);
       return;
@@ -26,11 +25,11 @@ export const useNftCollection = (walletAddress: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [walletAddress]);
 
   useEffect(() => {
     fetchNfts();
-  }, [walletAddress, fetchNfts]);
+  }, [fetchNfts]);
 
   return { nfts, isLoading, error, refetch: fetchNfts };
 };

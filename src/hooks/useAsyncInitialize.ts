@@ -25,7 +25,7 @@ export function useAsyncInitialize<T>(
     return () => {
       isMounted = false;
     };
-  }, [...deps, func]);
+  }, deps);
 
   return { state, error };
 }
