@@ -76,7 +76,7 @@ export function useJettonContract() {
   // Initialize jettonWalletProvider after jettonMasterProvider is available
   const { state: jettonWalletProvider, error: jettonWalletError } = useAsyncInitialize(
     async () => {
-      if (!jettonMasterProvider || !wallet || !client) throw new Error('Missing dependencies');
+      if (!jettonMasterProvider || !wallet || !client) return null;
       
       const jettonWalletAddress = await jettonMasterProvider.getWalletAddress(wallet);
       const jettonWallet = JettonWallet.create(jettonWalletAddress);
@@ -117,11 +117,22 @@ export function useJettonContract() {
 
   // Combined effect for both data and balance
   useEffect(() => {
-    if (!jettonMasterProvider || !jettonWalletProvider) return;
-
     let isMounted = true;
+
     const updateState = async () => {
       setState(prev => ({ ...prev, isLoading: true }));
+      
+      if (!jettonMasterProvider || !jettonWalletProvider) {
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          tokenData: null,
+          balance: null,
+          masterError: null,
+          walletError: null
+        }));
+        return;
+      }
       
       try {
         const [data, balance] = await Promise.all([
