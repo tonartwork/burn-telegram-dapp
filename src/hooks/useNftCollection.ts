@@ -14,18 +14,22 @@ export const useNftCollection = (walletAddress: string | null) => {
     }
 
     try {
-      setIsLoading(true);
+      if (nfts.length === 0) {
+        setIsLoading(true);
+      }
+      
       const fetchedNfts = await tonApiService.getUserCollectionNfts(
         env.NEXT_PUBLIC_COLLECTION_ADDRESS,
         walletAddress,
       );
+      
       setNfts(fetchedNfts);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch NFTs'));
     } finally {
       setIsLoading(false);
     }
-  }, [walletAddress]);
+  }, [walletAddress, nfts.length]);
 
   useEffect(() => {
     fetchNfts();

@@ -76,7 +76,8 @@ const ImageGrid = ({
               "w-full rounded-xl",
               isBurning && "opacity-50"
             )}
-            loading="lazy"
+            loading="eager"
+            priority={true}
           />
           {isBurning && (
             <div className="absolute inset-0 flex items-center justify-center">
