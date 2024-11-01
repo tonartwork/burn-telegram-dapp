@@ -1,3 +1,65 @@
+# Telegram Mini App - NFT Burn Event
+
+A Telegram Mini App built with Next.js that allows users to burn NFTs from a specific collection on TON blockchain. The app features a modern UI, wallet integration, and real-time NFT management.
+
+## Features
+
+- 🖼️ NFT Collection Display & Management
+- 🔥 NFT Display and Transfer Functionality directly from blockchain
+- 💳 TON Connect Wallet Integration
+- 🌐 Telegram Mini Apps SDK Integration
+- 🎨 Modern UI with Tailwind CSS
+- 🌍 i18n Support (EN/RU)
+
+## Quick Start
+
+1. Clone the repository:
+```bash
+git clone git@github.com:tonartwork/burn-telegram-dapp.git
+cd burn-telegram-dapp
+```
+
+2. Install dependencies:
+```bash
+bun install
+```
+
+3. Create `.env` file based on `.env.example`:
+```env
+NEXT_PUBLIC_TONAPI_KEY=your_ton_api_key
+NEXT_PUBLIC_COLLECTION_ADDRESS=collection_address
+NEXT_PUBLIC_JETTON_ADDRESS=jetton_address
+NEXT_PUBLIC_TONCENTER_MAINNET_KEY=toncenter_key
+NEXT_PUBLIC_TONCENTER_TESTNET_KEY=toncenter_key
+```
+
+4. Run development server:
+```bash
+bun run dev
+```
+
+For HTTPS development (required for Telegram Mini Apps):
+```bash
+bun run dev --port 3000
+```
+
+## Production Build
+
+```bash
+bun run build
+```
+
+## Tech Stack
+
+- Next.js 14
+- TON Connect
+- Telegram Mini Apps SDK
+- Tailwind CSS
+- shadcn/ui Components
+- Sentry for Error Tracking
+- TMA Next.js template
+
+
 # Telegram Mini Apps Next.js Template
 
 This template demonstrates how developers can implement a web application on the
