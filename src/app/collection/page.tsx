@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +14,7 @@ import { useNftCollection } from '@/hooks/useNftCollection';
 import { useJettonContract } from "@/hooks/useJettonContract";
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
+import { repeat } from '@/utils/repeat';
 
 export default function CollectionPage() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function CollectionPage() {
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
 
+  const { nfts, isLoading: isCollectionLoading, refetch } = useNftCollection(walletAddress);
 
   const { 
     balance,
@@ -33,31 +35,62 @@ export default function CollectionPage() {
 
   const { selectNftItem, burnNft, isContractReady } = useNftItemContract();
 
-  const isBurning = false;
+  // Add this state to track burning NFTs
+  const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     if (!connected) {
       router.push('/');
     }
-  }, [connected]);
-  const { nfts, isLoading: isCollectionLoading, refetch } = useNftCollection(walletAddress);
-  const handleBurnNft = async () => {
-    try {
-      const burn = await burnNft();
-      console.log('burn success', burn);
-      selectNft(null);
-      refetch();
-    } catch (error) {
-      alert('Failed to burn NFT. Please try again.');
-    }
-  };
+  }, [connected, router]);
 
-  const selectNft = (nft: NftItem | null) => {
+  const isBurning = false;
+  // Memoize the selectNft callback
+  const selectNft = useCallback((nft: NftItem | null) => {
     setSelectedNft(nft);
     selectNftItem(nft);
-  };
+  }, [selectNftItem]);
+
+  // Memoize the handleBurnNft callback
+  const handleBurnNft = useCallback(async () => {
+    if (!selectedNft) return;
+    
+    try {
+      setBurningNfts(prev => new Set(prev).add(selectedNft.address));
+      
+      // First burn the NFT (only once)
+      await burnNft();
+      selectNft(null);
+
+      // Then start polling with refetch every 5 seconds
+      const stopRepeat = repeat(async () => {
+        await refetch();
+      }, 5000);
+
+      // Stop repeating after 2 minutes
+      setTimeout(() => {
+        stopRepeat();
+        setBurningNfts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(selectedNft.address);
+          return newSet;
+        });
+      }, 120000); // 2 minutes
+    } catch (error) {
+      alert('Failed to burn NFT. Please try again.');
+      setBurningNfts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(selectedNft.address);
+        return newSet;
+      });
+    }
+  }, [burnNft, selectNft, refetch, selectedNft]);
 
   const error = walletError || masterError || null;
   const jettonMeta = tokenData?.content || { symbol: '', description: '' };
+
+  console.log('jettonMeta', jettonMeta);
+
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -70,6 +103,7 @@ export default function CollectionPage() {
               onSelect={selectNft}
               selectedAddress={selectedNft?.address || null}
               isLoading={isCollectionLoading}
+              burningNfts={burningNfts}
             />
           </CardContent>
           <CardFooter>

@@ -1,5 +1,5 @@
 // cache the images to avoid obtaining them from tonapi.io on initial load
-export default [
+ const nftPreviews = [
   "https://cache.tonapi.io/imgproxy/D08GmAkG9LwyYrMhxqWBbeAFIwEkwuDTNorO6cF_FAg/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtVG5Ndm1QTDM1UmpNRFVUa1JXUGNSazRtNnNTb0VKanVEa01HczlqOWF1UEo.webp",
   "https://cache.tonapi.io/imgproxy/Zy60ibdDQEjPtu42K_3JSH3qao0AtE33R8iucmS4wFo/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtZDZMMWYzc1YxZHNmelNGWTNEOUE5Yk1xZDhkWGR3Y3gzZFZScFBHS0trNUU.webp",
   "https://cache.tonapi.io/imgproxy/vJd76i4eSAhRgHntXibB8sXEIO_XUCKNTv51g0a1sZc/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtYjlvTmQ3RmdETUticldyVE5jUThRQXNhY2RNN1hSQmdZaTYyZnc3eWQxZnY.webp",
@@ -65,3 +65,5 @@ export default [
   "https://cache.tonapi.io/imgproxy/2KGIU0eRWRHXbhfH5uYm4dYpkcO4x6iR-zGS1qqEDnM/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtWWFWa0RlQkRSNjRLUHhUeWVLVzVDTG1WTGJVTUpkVXpHaW1vV21idmJhS2g.webp",
   "https://cache.tonapi.io/imgproxy/Gck3f5fVTcdg7BXy4n28sjYJJ7G63fc99f_w1CsuVSM/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtU3I4cHo2elBaMWg5bjdidUF0N01YWVVKMUZDZjkxSGZUMW1lYTVhTFFHMTI.webp"
 ]
+
+export default nftPreviews;

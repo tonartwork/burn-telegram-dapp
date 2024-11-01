@@ -9,12 +9,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/Carousel";
 import { NftItem } from '@/core/services/TonApiService';
+import { Loader2 } from "lucide-react";
 
 interface ImageCarouselProps {
   items: NftItem[];
   onSelect: (item: NftItem) => void;
   selectedAddress: string | null;
   isLoading?: boolean;
+  burningNfts: Set<string>;
 }
 
 const LoadingGrid = () => (
@@ -41,34 +43,47 @@ const ImageGrid = ({
   items, 
   startIndex, 
   onSelect, 
-  selectedAddress 
+  selectedAddress,
+  burningNfts 
 }: { 
   items: NftItem[];
   startIndex: number;
   onSelect: (item: NftItem) => void;
   selectedAddress: string | null;
+  burningNfts: Set<string>;
 }) => (
   <div className="grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6">
     {items.slice(startIndex, startIndex + 9).map((item) => {
       const imageUrl = item.previews?.[1]?.url || '/images/guardiance-image.png';
+      const isBurning = burningNfts.has(item.address);
       
       return (
         <div 
           key={item.address} 
           className={cn(
-            "relative cursor-pointer transition-all duration-200 hover:opacity-80",
+            "relative aspect-square",
+            !isBurning && "cursor-pointer transition-all duration-200 hover:opacity-80",
             selectedAddress === item.address && "ring-2 ring-green-500 opacity-70 rounded-xl"
           )}
-          onClick={() => onSelect(item)}
+          onClick={() => !isBurning && onSelect(item)}
         >
           <Image
             src={imageUrl}
             alt={`NFT ${item.address}`}
             width={100}
             height={100}
-            className="w-full rounded-xl"
-            loading="lazy"
+            className={cn(
+              "w-full rounded-xl",
+              isBurning && "opacity-50"
+            )}
+            loading="eager"
+            priority={true}
           />
+          {isBurning && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-gray-600" />
+            </div>
+          )}
         </div>
       );
     })}
@@ -79,7 +94,8 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   items = [], 
   onSelect, 
   selectedAddress,
-  isLoading = false
+  isLoading = false,
+  burningNfts
 }) => {
   if (isLoading) {
     return <LoadingGrid />;
@@ -110,6 +126,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 startIndex={startIndex}
                 onSelect={onSelect}
                 selectedAddress={selectedAddress}
+                burningNfts={burningNfts}
               />
             </Suspense>
           </CarouselItem>
