@@ -59,7 +59,7 @@ export function useNftItemContract() {
         $$type: "Transfer",
         new_owner: burnContractAddress,
         query_id: BigInt(Math.floor(Math.random() * 1000000000000000000)),
-        response_destination: null,
+        response_destination: burnContractAddress,
         custom_payload: null,
         forward_amount: BigInt(0),
         forward_payload: beginCell().endCell(),
