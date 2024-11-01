@@ -16,22 +16,32 @@ export function useNftItemContract() {
     isLoading: boolean;
     isTransferLoading: boolean;
     isContractReady: boolean;
+    error: Error | null;
   }>({
     owner: null,
     isLoading: false,
     isTransferLoading: false,
     isContractReady: false,
+    error: null,
   });
 
   const selectNftItem = useCallback(async (item: ApiNftItem | null) => {
     if (!item) {
       setContractAddress(null);
-      setState((prev) => ({ ...prev, isContractReady: false }));
+      setState((prev) => ({ ...prev, isContractReady: false, error: null }));
       return;
     }
-    console.log('selectNftItem', item);
-    setContractAddress(Address.parse(item.address));
-    setState((prev) => ({ ...prev, isContractReady: true }));
+    try {
+      console.log('selectNftItem', item);
+      setContractAddress(Address.parse(item.address));
+      setState((prev) => ({ ...prev, isContractReady: true, error: null }));
+    } catch (error) {
+      setState((prev) => ({ 
+        ...prev, 
+        isContractReady: false, 
+        error: error instanceof Error ? error : new Error('Failed to select NFT')
+      }));
+    }
   }, []);
 
   const getNftItemContract = useCallback(async () => {
@@ -39,18 +49,27 @@ export function useNftItemContract() {
     const contract = NftItem.fromAddress(itemContractAddress);
     return client.open(contract) as OpenedContract<NftItem>;
   }, [client, itemContractAddress]);
+
   const { state: nftItemContract, error: nftItemContractError } = useAsyncInitialize(
     getNftItemContract,
     [getNftItemContract]
   );
 
-  // Burn NFT by sending a mint transaction to the contract
+  // Update error state when contract initialization fails
+  useEffect(() => {
+    if (nftItemContractError) {
+      setState(prev => ({ ...prev, error: nftItemContractError }));
+    }
+  }, [nftItemContractError]);
+
   const burnNft = useCallback(async () => {
     if (!nftItemContract || !sender || !sender.address) {
-      console.error('No nftItemContract or sender or sender.address', nftItemContract, sender);
+      const error = new Error('No contract or sender available');
+      setState(prev => ({ ...prev, error }));
       return;
-    };
-    setState((prev) => ({ ...prev, isTransferLoading: true }));
+    }
+
+    setState((prev) => ({ ...prev, isTransferLoading: true, error: null }));
     try {
       const gasFee = 0.2;
       const burnContractAddress = Address.parse(env.NEXT_PUBLIC_BURN_CONTRACT_ADDRESS);
@@ -64,7 +83,6 @@ export function useNftItemContract() {
         forward_amount: BigInt(0),
         forward_payload: beginCell().endCell(),
       };
-      console.log('burnNft params', transferParams);
 
       await nftItemContract.send(
         sender,
@@ -74,13 +92,16 @@ export function useNftItemContract() {
         transferParams
       );
 
-      setState((prev) => ({ ...prev, isTransferLoading: false }));
+      setState((prev) => ({ ...prev, isTransferLoading: false, error: null }));
     } catch (error) {
-      console.error("Error minting NFT:", error);
-      setState((prev) => ({ ...prev, isTransferLoading: false }));
+      console.error("Error burning NFT:", error);
+      setState((prev) => ({ 
+        ...prev, 
+        isTransferLoading: false,
+        error: error instanceof Error ? error : new Error('Failed to burn NFT')
+      }));
     }
   }, [nftItemContract, sender]);
-
 
   return {
     ...state,

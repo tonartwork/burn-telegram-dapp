@@ -56,7 +56,7 @@ export default function Home() {
         </Card>
         <div className="px-4">
           <p className="text-center text-sm text-gray-600 mb-8">
-            {wallet ? 'Select NFTs to burn' : 'Connect your wallet to participate in the event'}
+            {wallet ? 'It\'s time to burn!' : 'Connect your wallet to participate in the event'}
           </p>
         </div>
       </ContentWrapper>

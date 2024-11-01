@@ -1,7 +1,11 @@
 {
-  "name": "nextjs-template",
+  "name": "burn-telegram-dapp",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0",
+    "bun": ">=1.0.0"
+  },
   "scripts": {
     "dev": "bun run next dev",
     "dev:https": "bun run next dev --experimental-https",

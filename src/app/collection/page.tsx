@@ -15,10 +15,11 @@ import { useJettonContract } from "@/hooks/useJettonContract";
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
 import { repeat } from '@/utils/repeat';
+import { WalletsModalState } from '@tonconnect/ui';
 
 export default function CollectionPage() {
   const router = useRouter();
-  const { connected, wallet } = useTonConnect();
+  const { connected, wallet, ui: tonConnectUI } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
 
   const [selectedNft, setSelectedNft] = useState<NftItem | null>(null);
@@ -27,13 +28,12 @@ export default function CollectionPage() {
 
   const { 
     balance,
-    isLoading,
     masterError,
     walletError,
     tokenData
   } = useJettonContract();
 
-  const { selectNftItem, burnNft, isContractReady } = useNftItemContract();
+  const { selectNftItem, burnNft, isContractReady, isTransferLoading, error: burnNftError } = useNftItemContract();
 
   // Add this state to track burning NFTs
   const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
@@ -44,7 +44,20 @@ export default function CollectionPage() {
     }
   }, [connected, router]);
 
-  const isBurning = false;
+  useEffect(() => {
+    if (burnNftError && selectedNft) {
+      // Remove the NFT from burning state
+      setBurningNfts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(selectedNft.address);
+        return newSet;
+      });
+      
+      // Show error message
+      console.log(burnNftError.message || 'Failed to burn NFT. Please try again.');
+    }
+  }, [burnNftError, selectedNft]);
+
   // Memoize the selectNft callback
   const selectNft = useCallback((nft: NftItem | null) => {
     setSelectedNft(nft);
@@ -77,7 +90,7 @@ export default function CollectionPage() {
         });
       }, 120000); // 2 minutes
     } catch (error) {
-      alert('Failed to burn NFT. Please try again.');
+      // Remove NFT from burning state
       setBurningNfts(prev => {
         const newSet = new Set(prev);
         newSet.delete(selectedNft.address);
@@ -90,6 +103,7 @@ export default function CollectionPage() {
   const jettonMeta = tokenData?.content || { symbol: '', description: '' };
 
   console.log('jettonMeta', jettonMeta);
+  console.log('isTransferLoading', isTransferLoading);
 
   return (
     <Page>
@@ -109,10 +123,10 @@ export default function CollectionPage() {
           <CardFooter>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={!selectedNft || !isContractReady || isBurning}
+              disabled={!selectedNft || !isContractReady || isTransferLoading}
               onClick={handleBurnNft}
             >
-              {isBurning ? 'Burning...' : 'Burn NFT'}
+              {isTransferLoading ? 'Sending Transaction...' : 'Burn NFT'}
             </Button>
           </CardFooter>
         </Card>
