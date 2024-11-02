@@ -20,9 +20,6 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
-  experimental: {
-    appDir: true
-  },
   trailingSlash: true,
   skipMiddlewareUrlNormalize: true,
   skipTrailingSlashRedirect: true
@@ -30,12 +27,6 @@ const nextConfig = {
 
 const config = withNextIntl(nextConfig);
 
-config.generateStaticParams = async () => {
-  return [
-    { locale: 'en' },
-    { locale: 'ru' }
-  ];
-};
 
 export default withSentryConfig(config, {
 // For all available options, see:
