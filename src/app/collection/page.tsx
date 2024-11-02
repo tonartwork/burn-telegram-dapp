@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -42,8 +42,7 @@ export default function CollectionPage() {
 
   useEffect(() => {
     if (!connected) {
-      console.error('not connected');
-      router.push('/');
+      console.warn('disconnected');
     }
   }, [connected, router]);
 
