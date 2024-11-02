@@ -92,7 +92,7 @@ export default function CollectionPage() {
     if (nfts.length > 0) {
       selectNft(nfts[0]);
     }
-  }, []);
+  }, [selectNft]);
 
   const error = walletError || masterError || null;
   const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the nextevents' };
@@ -107,7 +107,7 @@ export default function CollectionPage() {
             <ImageCarousel 
               items={nfts}
               onSelect={selectNft}
-              selectedAddress={selectedNft?.address}
+              selectedAddress={selectedNft?.address || null}
               isLoading={isCollectionLoading}
               burningNfts={burningNfts}
             />
