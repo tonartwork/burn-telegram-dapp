@@ -18,7 +18,7 @@ import { repeat } from '@/utils/repeat';
 
 
 export default function CollectionPage() {
-  const DISPLAY_ERROR_TEXT = true;
+  const DISPLAY_ERROR_TEXT = false;
   const router = useRouter();
   const { connected, wallet } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
@@ -42,7 +42,8 @@ export default function CollectionPage() {
 
   useEffect(() => {
     if (!connected) {
-      router.push('/');
+      // router.push('/');
+      console.error('not connected');
     }
   }, [connected, router]);
 
@@ -145,7 +146,7 @@ const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta
   )
 }
 
-const renderError = (error: Error | null) => {
+const renderError = (error: Error | null | false) => {
   if (!error) return null;
   return (
     <p className="text-center text-sm text-red-500 mt-2">
