@@ -39,7 +39,7 @@ export default function CollectionPage() {
 
   // Add this state to track burning NFTs
   const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
-
+  console.log('burningNfts', burningNfts);
   useEffect(() => {
     if (!connected) {
       console.warn('disconnected');
@@ -88,11 +88,16 @@ export default function CollectionPage() {
     }
   }, [burnNft, selectNft, refetch, selectedNft]);
 
-  const error = walletError || masterError || null;
-  const jettonMeta = tokenData?.content || { symbol: '', description: '' };
 
-  console.log('jettonMeta', jettonMeta);
-  const selectedByDefault = nfts.length > 0 ? nfts[0].address : null;
+  useEffect(() => {
+    if (nfts.length > 0) {
+      selectNft(nfts[0]);
+    }
+  }, []);
+
+  const error = walletError || masterError || null;
+  const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the nextevents' };
+
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -103,7 +108,7 @@ export default function CollectionPage() {
             <ImageCarousel 
               items={nfts}
               onSelect={selectNft}
-              selectedAddress={selectedNft?.address || selectedByDefault}
+              selectedAddress={selectedNft?.address}
               isLoading={isCollectionLoading}
               burningNfts={burningNfts}
             />
@@ -131,15 +136,15 @@ const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta
       Loading token data...
     </p>
   </>);
-  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol || 'tokens'}`;
-  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol || 'tokens'}`;
+  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol}`;
+  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
   return (
     <>
       <p className="text-center text-sm text-gray-400 mb-2 px-10">
         { balanceText }
       </p>
       <p className="text-center text-sm text-gray-400 px-8">
-        { jettonMeta.description || 'Tokens will be used in the nextevents' }
+        { jettonMeta.description }
       </p>
     </>
   )
