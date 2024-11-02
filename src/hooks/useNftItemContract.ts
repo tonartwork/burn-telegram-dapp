@@ -52,7 +52,7 @@ export function useNftItemContract() {
     };
     setState((prev) => ({ ...prev, isTransferLoading: true }));
     try {
-      const gasFee = 0.2;
+      const gasFee = 0.05;
       const burnContractAddress = Address.parse(env.NEXT_PUBLIC_BURN_CONTRACT_ADDRESS);
 
       const transferParams: Transfer = {
