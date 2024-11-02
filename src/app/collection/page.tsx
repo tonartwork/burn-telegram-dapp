@@ -95,7 +95,7 @@ export default function CollectionPage() {
   }, [selectNft]);
 
   const error = walletError || masterError || null;
-  const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the nextevents' };
+  const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the next events' };
 
   return (
     <Page>
