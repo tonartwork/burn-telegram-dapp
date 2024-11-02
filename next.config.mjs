@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/core/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'sense.mypinata.cloud', 'tonapi.io', 'cache.tonapi.io', 'tonart.work'],
+    domains: ['localhost', 'sense.mypinata.cloud', 'tonapi.io', 'cache.tonapi.io', '*.tonart.work'],
     unoptimized: true,
   },
   output: 'export',
