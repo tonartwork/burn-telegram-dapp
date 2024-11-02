@@ -39,7 +39,6 @@ export default function CollectionPage() {
 
   // Add this state to track burning NFTs
   const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
-  console.log('burningNfts', burningNfts);
   useEffect(() => {
     if (!connected) {
       console.warn('disconnected');
