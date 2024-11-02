@@ -19,6 +19,8 @@ interface ImageCarouselProps {
   burningNfts: Set<string>;
 }
 
+const CAROUSEL_ITEMS_LIMIT = 3;
+
 const LoadingGrid = () => (
   <div className="grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6">
     {Array(9).fill(null).map((_, index) => (
@@ -52,7 +54,7 @@ const ImageGrid = ({
   selectedAddress: string | null;
   burningNfts: Set<string>;
 }) => (
-  <div className="grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6">
+  <div className={cn("grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6", items.length > CAROUSEL_ITEMS_LIMIT ? 'grid-cols-3' : 'grid-cols-1')}>
     {items.slice(startIndex, startIndex + 9).map((item) => {
       const imageUrl = item.previews?.[1]?.url || '/images/guardiance-image.png';
       const isBurning = burningNfts.has(item.address);
@@ -132,8 +134,12 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className='ml-6' />
-      <CarouselNext className='mr-6' />
+      {items.length > CAROUSEL_ITEMS_LIMIT && (
+        <>
+          <CarouselPrevious className='ml-6' />
+          <CarouselNext className='mr-6' />
+        </>
+      )}
     </Carousel>
   );
 };

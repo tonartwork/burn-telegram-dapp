@@ -42,8 +42,8 @@ export default function CollectionPage() {
 
   useEffect(() => {
     if (!connected) {
-      // router.push('/');
       console.error('not connected');
+      router.push('/');
     }
   }, [connected, router]);
 
@@ -93,7 +93,7 @@ export default function CollectionPage() {
   const jettonMeta = tokenData?.content || { symbol: '', description: '' };
 
   console.log('jettonMeta', jettonMeta);
-
+  const selectedByDefault = nfts.length > 0 ? nfts[0].address : null;
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -104,7 +104,7 @@ export default function CollectionPage() {
             <ImageCarousel 
               items={nfts}
               onSelect={selectNft}
-              selectedAddress={selectedNft?.address || null}
+              selectedAddress={selectedNft?.address || selectedByDefault}
               isLoading={isCollectionLoading}
               burningNfts={burningNfts}
             />
@@ -132,15 +132,15 @@ const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta
       Loading token data...
     </p>
   </>);
-  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol}`;
-  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
+  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol || 'tokens'}`;
+  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol || 'tokens'}`;
   return (
     <>
       <p className="text-center text-sm text-gray-400 mb-2 px-10">
         { balanceText }
       </p>
       <p className="text-center text-sm text-gray-400 px-8">
-        { jettonMeta.description }
+        { jettonMeta.description || 'Tokens will be used in the nextevents' }
       </p>
     </>
   )
