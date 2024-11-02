@@ -16,7 +16,9 @@ import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
 import { repeat } from '@/utils/repeat';
 
+
 export default function CollectionPage() {
+  const DISPLAY_ERROR_TEXT = true;
   const router = useRouter();
   const { connected, wallet } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
@@ -27,7 +29,7 @@ export default function CollectionPage() {
 
   const { 
     balance,
-    isLoading,
+    isLoadingData: isJettonLoading,
     masterError,
     walletError,
     tokenData
@@ -116,18 +118,38 @@ export default function CollectionPage() {
             </Button>
           </CardFooter>
         </Card>
-        {error && (
-          <p className="text-center text-sm text-red-500 mt-2">
-            {error.message}
-          </p>
-        )}
-        <p className="text-center text-sm text-gray-400 mb-2 px-10">
-          You have { balance } { jettonMeta.symbol }
-        </p>
-        <p className="text-center text-sm text-gray-400 px-8">
-          { jettonMeta.description }
-        </p>
+        { renderError(DISPLAY_ERROR_TEXT && error) }
+        { renderJettonMeta(isJettonLoading, balance, jettonMeta) }
       </ContentWrapper>
     </Page>
   );
+}
+
+const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta: { symbol: string, description: string }) => {
+  if (isLoading) return (<>
+    <p className="text-center text-sm text-gray-400 mb-2 px-10">
+      Loading token data...
+    </p>
+  </>);
+  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol}`;
+  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
+  return (
+    <>
+      <p className="text-center text-sm text-gray-400 mb-2 px-10">
+        { balanceText }
+      </p>
+      <p className="text-center text-sm text-gray-400 px-8">
+        { jettonMeta.description }
+      </p>
+    </>
+  )
+}
+
+const renderError = (error: Error | null) => {
+  if (!error) return null;
+  return (
+    <p className="text-center text-sm text-red-500 mt-2">
+      {error.message}
+    </p>
+  )
 }

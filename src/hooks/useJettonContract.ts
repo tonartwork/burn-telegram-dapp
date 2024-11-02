@@ -20,27 +20,17 @@ type TokenData = {
   mintable: boolean;
 };
 
-// Add proper type for state
-type JettonState = {
-  tokenData: TokenData | null;
-  balance: string | null;
-  isLoading: boolean;
-  masterError: Error | null;
-  walletError: Error | null;
-};
+const REFRESH_INTERVAL = 10000;
 
 export function useJettonContract() {
   const { client } = useTonClient();
   const { wallet } = useTonConnect();
 
-  // Add proper typing to state
-  const [state, setState] = useState<JettonState>({
-    tokenData: null,
-    balance: null,
-    isLoading: false,
-    masterError: null,
-    walletError: null
-  });
+  const [tokenData, setTokenData] = useState<TokenData | null>(null);
+  const [balance, setBalance] = useState<string | null>(null);
+  const [isLoadingData, setIsLoadingData] = useState<boolean>(false);
+  const [masterError, setMasterError] = useState<Error | null>(null);
+  const [walletError, setWalletError] = useState<Error | null>(null);
 
   // Memoize jettonAddress
   const jettonAddress = useMemo(() => {
@@ -51,18 +41,19 @@ export function useJettonContract() {
   const { state: jettonMasterProvider, error: jettonMasterError } = useAsyncInitialize(
     async () => {
       if (!client) throw new Error('No client available');
+      const jettonMaster = JettonMaster.create(jettonAddress);
+      const provider = client.open(jettonMaster);
+
+      // Test if the contract is initialized
       try {
-        const jettonMaster = JettonMaster.create(jettonAddress);
-        const provider = client.open(jettonMaster);
-        // Test if contract is initialized
         await provider.getJettonData();
         return provider;
       } catch (err) {
         if (err instanceof Error && err.message.includes('exit_code: -13')) {
           // Contract exists but not initialized
-          return null;
+          throw new Error('Jetton master contract is not initialized');
         }
-        throw err;
+        throw err instanceof Error ? err : new Error('Failed to initialize jetton master provider');
       }
     },
     [client, jettonAddress]
@@ -70,115 +61,105 @@ export function useJettonContract() {
 
   // Handle master provider errors
   useEffect(() => {
-    if (jettonMasterError) setState(prev => ({ ...prev, masterError: jettonMasterError }));
+    if (jettonMasterError && (jettonMasterError !== masterError)) setMasterError(jettonMasterError);
   }, [jettonMasterError]);
 
   // Initialize jettonWalletProvider after jettonMasterProvider is available
   const { state: jettonWalletProvider, error: jettonWalletError } = useAsyncInitialize(
     async () => {
       if (!jettonMasterProvider || !wallet || !client) return null;
-      
-      const jettonWalletAddress = await jettonMasterProvider.getWalletAddress(wallet);
-      const jettonWallet = JettonWallet.create(jettonWalletAddress);
-      return client.open(jettonWallet);
+      try {
+        const jettonWalletAddress = await jettonMasterProvider.getWalletAddress(wallet);
+        const jettonWallet = JettonWallet.create(jettonWalletAddress);
+        return client.open(jettonWallet);
+      } catch (err) {
+        throw err instanceof Error ? err : new Error('Failed to initialize jetton wallet provider');
+      }
     },
     [jettonMasterProvider, wallet, client]
   );
 
   // Handle wallet provider errors
   useEffect(() => {
-    if (jettonWalletError) setState(prev => ({ ...prev, walletError: jettonWalletError }));
+    if (jettonWalletError && (jettonWalletError !== walletError)) setWalletError(jettonWalletError);
   }, [jettonWalletError]);
 
-  // Add type for fetchJettonData parameter
-  const fetchJettonData = useCallback(async (jettonMasterProvider: any) => {
-    try {
-      const jettonData = await jettonMasterProvider.getJettonData();
-      const meta = decodeOnchainMetadata(jettonData.content);
-      return {
-        mintable: jettonData.mintable,
-        totalSupply: fromNano(jettonData.totalSupply),
-        content: meta
-      } as TokenData;
-    } catch (err) {
-      throw err instanceof Error ? err : new Error(String(err));
-    }
-  }, []);
-
-  // Add type for fetchJettonBalance parameter
-  const fetchJettonBalance = useCallback(async (jettonWalletProvider: any) => {
-    try {
-      const balance = await jettonWalletProvider.getBalance();
-      return fromNano(balance);
-    } catch (err) {
-      throw err instanceof Error ? err : new Error(String(err));
-    }
-  }, []);
-
-  // Combined effect for both data and balance
+  // Fetch Jetton on-chain data (only once)
   useEffect(() => {
+    if (!jettonMasterProvider) return;
+
     let isMounted = true;
 
-    const updateState = async () => {
-      setState(prev => ({ ...prev, isLoading: true }));
-      
-      if (!jettonMasterProvider || !jettonWalletProvider) {
-        setState(prev => ({
-          ...prev,
-          isLoading: false,
-          tokenData: null,
-          balance: null,
-          masterError: null,
-          walletError: null
-        }));
-        return;
-      }
-      
+    const fetchJettonData = async () => {
+      setIsLoadingData(true);
       try {
-        const [data, balance] = await Promise.all([
-          fetchJettonData(jettonMasterProvider),
-          fetchJettonBalance(jettonWalletProvider)
-        ]);
+        const jettonData = await jettonMasterProvider.getJettonData();
+        const meta = decodeOnchainMetadata(jettonData.content) as JettonOnchainMetadata;
 
         if (isMounted) {
-          setState({
-            tokenData: data,
-            balance,
-            isLoading: false,
-            masterError: null,
-            walletError: null
+          setTokenData({
+            mintable: jettonData.mintable,
+            totalSupply: fromNano(jettonData.totalSupply),
+            content: meta
           });
+          setMasterError(null);
         }
       } catch (err) {
-        if (!isMounted) return;
-        
-        if (err instanceof Error && err.message.includes('exit_code: -13')) {
-          setState({
-            tokenData: null,
-            balance: '0',
-            isLoading: false,
-            masterError: null,
-            walletError: null
-          });
-        } else {
-          setState(prev => ({
-            ...prev,
-            isLoading: false,
-            masterError: err as Error,
-            walletError: err as Error
-          }));
+        console.error("Error fetching jetton data:", err);
+        if (isMounted) {
+          const error = err instanceof Error ? err : new Error('Failed to fetch jetton data');
+          setMasterError(error);
         }
+      } finally {
+        if (isMounted) setIsLoadingData(false);
       }
     };
 
-    updateState();
-    const interval = setInterval(updateState, 5000);
+    fetchJettonData();
 
     return () => {
       isMounted = false;
-      clearInterval(interval);
     };
-  }, [jettonMasterProvider, jettonWalletProvider, fetchJettonData, fetchJettonBalance]);
+  }, [jettonMasterProvider]);
 
-  return state;
+  // Fetch Jetton balance (refetch periodically)
+  useEffect(() => {
+    if (!jettonWalletProvider) return;
+
+    let isMounted = true;
+
+    const fetchJettonBalance = async () => {
+      try {
+        const jettonBalance = await jettonWalletProvider.getBalance();
+        if (isMounted) {
+          setBalance(fromNano(jettonBalance));
+          setWalletError(null);
+        }
+      } catch (err) {
+        console.error("Error fetching balance:", err);
+        if (isMounted) {
+          const error = err instanceof Error ? err : new Error('Failed to fetch jetton balance');
+          if (error.message.includes('exit_code: -13')) {
+            // Jetton wallet is not activated yet
+            setBalance('0');
+          } else {
+            setWalletError(error);
+          }
+        }
+      }
+    };
+
+    // Fetch balance immediately and then at intervals
+    fetchJettonBalance();
+    const refetchInterval = setInterval(() => {
+      fetchJettonBalance();
+    }, REFRESH_INTERVAL);
+
+    return () => {
+      isMounted = false;
+      clearInterval(refetchInterval);
+    };
+  }, [jettonWalletProvider]);
+
+  return { tokenData, balance, isLoadingData, masterError, walletError };
 }
