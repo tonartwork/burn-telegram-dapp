@@ -41,7 +41,7 @@ export default function CollectionPage() {
   const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
   useEffect(() => {
     if (!connected) {
-      console.warn('disconnected');
+      console.warn('disconnected!');
     }
   }, [connected, router]);
 
