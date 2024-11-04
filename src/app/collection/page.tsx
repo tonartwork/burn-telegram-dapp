@@ -105,7 +105,7 @@ export default function CollectionPage() {
     if (nfts.length > 0) {
       selectNft(nfts[0]);
     }
-  }, [selectNft]);
+  }, [selectNft, nfts]);
 
   const error = walletError || masterError || null;
   const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the next events' };
