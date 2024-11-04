@@ -8,7 +8,7 @@ interface MainHeaderProps {
 export function MainHeader({ children, className }: MainHeaderProps) {
   return (
     <h1 className={cn(
-      "text-4xl font-bold mb-4 text-center tracking-wide",
+      "text-5xl font-semibold mb-4 text-center tracking-wide tracking-[1.6px]",
       className
     )}>
       {children}

@@ -23,7 +23,7 @@ const statusContent = {
     )
   },
   error: {
-    title: 'Something went wrong!',
+    title: 'Something wrong!',
     subtitle: 'Try one more time',
     image: (
       <Image
@@ -54,11 +54,11 @@ export const StatusComponent: React.FC<StatusComponentProps> = ({ status }) => {
   const content = statusContent[status];
   
   return (
-    <div className="flex flex-col items-center justify-center text-center px-6">
-      <h2 className="text-2xl font-bold mb-2">
+    <div className="flex flex-col items-center justify-center text-center px-6 mt-6">
+      <h2 className="text-3xl font-semibold mb-2">
         {content.title}
       </h2>
-      <h2 className="text-2xl font-bold mb-2">
+      <h2 className="text-3xl font-semibold mb-2">
         {content.subtitle}
       </h2>
       <div className="mt-6">
