@@ -26,23 +26,25 @@ export default function CollectionPage() {
 
   return (
     <Page>
-      <ContentWrapper className="!px-0 !max-w-sm">
+      <ContentWrapper className="!px-0 !max-w-sm h-full flex flex-col">
         <MainHeader>Sense x Guardians <br/> Collection </MainHeader>
         <WalletComponent />
-        <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
-          <CardContent className="pt-6">
-          </CardContent>
-          <NftCollection nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
-          <CardFooter>
-            <Button 
-              className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={isTransferLoading}
-              onClick={() => {}}
-            >
-              {isTransferLoading ? 'Sending Transaction...' : 'Mint NFT'}
-            </Button>
-          </CardFooter>
-        </Card>
+        <div className="flex-1 flex items-center justify-center">
+          <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden w-full">
+            <CardContent className="pt-6 mb-6">
+            </CardContent>
+            <NftCollection nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
+            <CardFooter>
+              <Button 
+                className="w-full bg-black text-white hover:bg-gray-800 mt-1"
+                disabled={isTransferLoading}
+                onClick={() => {}}
+              >
+                {isTransferLoading ? 'Sending Transaction...' : 'Mint NFT'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
         { renderError(DISPLAY_ERROR_TEXT && error) }
       </ContentWrapper>
     </Page>
