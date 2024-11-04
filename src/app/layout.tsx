@@ -8,14 +8,17 @@ import 'normalize.css/normalize.css';
 import './_assets/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Sense x Guardians',
+  title: '[burn event] Sense x Guardians',
   description: 'Sense x Guardians burn event', 
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  other: {
+    'next-loading': 'disable'
+  }
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <body>
         <Root>
           {children}

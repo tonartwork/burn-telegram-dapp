@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/core/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'sense.mypinata.cloud', 'tonapi.io', 'cache.tonapi.io', 'tonart.work'],
+    domains: ['localhost', 'sense.mypinata.cloud', 'tonapi.io', 'cache.tonapi.io', '*.tonart.work'],
     unoptimized: true,
   },
   output: 'export',
@@ -20,9 +20,6 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
-  experimental: {
-    appDir: true
-  },
   trailingSlash: true,
   skipMiddlewareUrlNormalize: true,
   skipTrailingSlashRedirect: true
@@ -30,12 +27,6 @@ const nextConfig = {
 
 const config = withNextIntl(nextConfig);
 
-config.generateStaticParams = async () => {
-  return [
-    { locale: 'en' },
-    { locale: 'ru' }
-  ];
-};
 
 export default withSentryConfig(config, {
 // For all available options, see:

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -17,7 +17,9 @@ import { useNftItemContract } from '@/hooks/useNftItemContract';
 import { repeat } from '@/utils/repeat';
 import { WalletsModalState } from '@tonconnect/ui';
 
+
 export default function CollectionPage() {
+  const DISPLAY_ERROR_TEXT = false;
   const router = useRouter();
   const { connected, wallet, ui: tonConnectUI } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
@@ -28,6 +30,7 @@ export default function CollectionPage() {
 
   const { 
     balance,
+    isLoadingData: isJettonLoading,
     masterError,
     walletError,
     tokenData
@@ -37,10 +40,9 @@ export default function CollectionPage() {
 
   // Add this state to track burning NFTs
   const [burningNfts, setBurningNfts] = useState<Set<string>>(new Set());
-
   useEffect(() => {
     if (!connected) {
-      router.push('/');
+      console.warn('disconnected!');
     }
   }, [connected, router]);
 
@@ -99,11 +101,14 @@ export default function CollectionPage() {
     }
   }, [burnNft, selectNft, refetch, selectedNft]);
 
-  const error = walletError || masterError || null;
-  const jettonMeta = tokenData?.content || { symbol: '', description: '' };
+  useEffect(() => {
+    if (nfts.length > 0) {
+      selectNft(nfts[0]);
+    }
+  }, [selectNft]);
 
-  console.log('jettonMeta', jettonMeta);
-  console.log('isTransferLoading', isTransferLoading);
+  const error = walletError || masterError || null;
+  const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the next events' };
 
   return (
     <Page>
@@ -130,18 +135,38 @@ export default function CollectionPage() {
             </Button>
           </CardFooter>
         </Card>
-        {error && (
-          <p className="text-center text-sm text-red-500 mt-2">
-            {error.message}
-          </p>
-        )}
-        <p className="text-center text-sm text-gray-400 mb-2 px-10">
-          You have { balance } { jettonMeta.symbol }
-        </p>
-        <p className="text-center text-sm text-gray-400 px-8">
-          { jettonMeta.description }
-        </p>
+        { renderError(DISPLAY_ERROR_TEXT && error) }
+        { renderJettonMeta(isJettonLoading, balance, jettonMeta) }
       </ContentWrapper>
     </Page>
   );
+}
+
+const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta: { symbol: string, description: string }) => {
+  if (isLoading) return (<>
+    <p className="text-center text-sm text-gray-400 mb-2 px-10">
+      Loading token data...
+    </p>
+  </>);
+  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol}`;
+  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
+  return (
+    <>
+      <p className="text-center text-sm text-gray-400 mb-2 px-10">
+        { balanceText }
+      </p>
+      <p className="text-center text-sm text-gray-400 px-8">
+        { jettonMeta.description }
+      </p>
+    </>
+  )
+}
+
+const renderError = (error: Error | null | false) => {
+  if (!error) return null;
+  return (
+    <p className="text-center text-sm text-red-500 mt-2">
+      {error.message}
+    </p>
+  )
 }

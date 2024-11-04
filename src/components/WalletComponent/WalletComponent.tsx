@@ -4,9 +4,11 @@ import { Wallet } from 'lucide-react';
 import { Address } from '@ton/core';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export const WalletComponent: React.FC = () => {
   const { connected, wallet, ui: tonConnectUI, networkType} = useTonConnect();
+  const router = useRouter();
 
   const formatAddress = (address: string) => {
     if (!address) return '';
@@ -19,6 +21,7 @@ export const WalletComponent: React.FC = () => {
     } else {
       if (window.confirm('Are you sure you want to sign out?')) {
         tonConnectUI.disconnect();
+        if (router) router.push('/');
       }
     }
   
