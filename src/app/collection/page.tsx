@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { env } from '@/core/config/env';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +11,7 @@ import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
+import { NftCollection } from '@/components/NftCollection/NftCollection';
 
 
 export default function CollectionPage() {
@@ -30,13 +32,14 @@ export default function CollectionPage() {
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
           </CardContent>
+          <NftCollection nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
           <CardFooter>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
               disabled={isTransferLoading}
               onClick={() => {}}
             >
-              {isTransferLoading ? 'Sending Transaction...' : 'Burn NFT'}
+              {isTransferLoading ? 'Sending Transaction...' : 'Mint NFT'}
             </Button>
           </CardFooter>
         </Card>
