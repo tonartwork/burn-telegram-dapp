@@ -55,7 +55,7 @@ export default function Home() {
           </div>
         </Card>
         <div className="px-4">
-          <p className="text-center text-sm text-gray-600 mb-8">
+          <p className="text-center text-md text-gray-600 mb-8 -mt-4">
             {wallet ? 'It\'s time to burn!' : 'Connect your wallet to participate in the event'}
           </p>
         </div>
