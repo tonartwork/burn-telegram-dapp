@@ -53,10 +53,12 @@ const ImageGrid = ({
   onSelect: (item: NftItem) => void;
   selectedAddress: string | null;
   burningNfts: Set<string>;
-}) => (
-  <div className={cn("grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6", items.length > CAROUSEL_ITEMS_LIMIT ? 'grid-cols-3' : 'grid-cols-1')}>
-    {items.slice(startIndex, startIndex + 9).map((item) => {
-      const imageUrl = item.previews?.[1]?.url || '/images/guardiance-image.png';
+}) => {
+  const isFullMode = items.length > CAROUSEL_ITEMS_LIMIT;
+  return (
+    <div className={cn("grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6", isFullMode ? 'grid-cols-3' : 'grid-cols-1')}>
+      {items.slice(startIndex, startIndex + 9).map((item) => {
+      const imageUrl = isFullMode ? item.previews?.[1]?.url : item.previews?.[2]?.url;
       const isBurning = burningNfts.has(item.address);
       
       return (
@@ -89,8 +91,9 @@ const ImageGrid = ({
         </div>
       );
     })}
-  </div>
-);
+    </div>
+  );
+};
 
 export const ImageCarousel: React.FC<ImageCarouselProps> = ({ 
   items = [], 
