@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { env } from '@/core/config/env';
 import { Root } from '@/components/Root/Root';
+import { interTight, spaceGrotesk } from '@/lib/fonts'
 
 import '@telegram-apps/telegram-ui/dist/styles.css';
 import 'normalize.css/normalize.css';
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable}`}>
       <body>
         <Root>
           {children}

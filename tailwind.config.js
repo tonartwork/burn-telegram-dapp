@@ -84,6 +84,10 @@ const config = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			'slide-left': 'slide-left 20s linear infinite'
+  		},
+  		fontFamily: {
+  			'inter-tight': ['var(--font-inter-tight)'],
+  			'space-grotesk': ['var(--font-space-grotesk)']
   		}
   	}
   },

@@ -29,7 +29,7 @@ export default function CollectionSuccessPage() {
           </Card>
         </div>
         <div className="px-4">
-          <p className="text-center text-md text-gray-600 mb-8 -mt-4">
+          <p className="text-center text-md text-gray-600 mb-8 -mt-4 font-inter-tight">
             {'Usually it takes no more than 2 minutes to deliver NFT on your Wallet'}
           </p>
         </div>
