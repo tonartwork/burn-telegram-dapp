@@ -3,6 +3,7 @@ import { tonApiService } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
 
 type CollectionInfo = {
+  image: string;
   totalItems: number;
   mintedItems: number;
   price: string;
@@ -11,6 +12,7 @@ type CollectionInfo = {
 };
 
 const INITIAL_STATE: CollectionInfo = {
+  image: '/images/guardiance-image.png',
   totalItems: 1024,
   mintedItems: 0,
   price: '1',
@@ -34,6 +36,8 @@ export function useNftCollectionInfo() {
         if (collection) {
           setCollectionInfo(prev => ({
             ...prev,
+            name: collection.metadata?.name || INITIAL_STATE.name,
+            image: collection.previews?.[1]?.url || INITIAL_STATE.image,
             totalItems: collection.next_item_index || INITIAL_STATE.totalItems,
             mintedItems: collection.next_item_index || 0,
           }));
