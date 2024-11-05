@@ -66,8 +66,8 @@ export default function PlaygroundPage() {
         <div className="flex-1 flex items-center justify-center">
           <ImageMouseTrail
             items={images}
-            maxNumberOfImages={7}
-            distance={25}
+            maxNumberOfImages={3}
+            distance={5}
             imgClass='w-24 h-24 rounded-lg'
             className='bg-white text-black'
             fadeAnimation={true}

@@ -58,7 +58,7 @@ export default function ImageMouseTrail({
   };
 
   const handleOnMove = (e) => {
-    if (distanceFromLast(e.clientX, e.clientY) > window.innerWidth / 10) {
+    if (distanceFromLast(e.clientX, e.clientY) > window.innerWidth / distance) {
       //console.log(e.clientX, e.clientY);
 
       const lead = refs.current[globalIndex % refs.current.length].current;
