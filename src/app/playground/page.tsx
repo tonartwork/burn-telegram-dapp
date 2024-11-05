@@ -1,6 +1,9 @@
 'use client';
+
+import { useState } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import ImageMouseTrail from '@/components/ui/Mousetrail';
+import NumberInput from '@/components/ui/NumberInput';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
@@ -57,13 +60,17 @@ const images = [
   "https://cache.tonapi.io/imgproxy/PMV-MyCgay6LqcDROCI5E5IYVjHLcrweC9s_KF6IGNo/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtV1o0U2h6QXFSa1hRWkwyZjJWSHF6QTE3UlQ1RW5RSzZ2VXl1NU51b3BXdWY.webp",
   "https://cache.tonapi.io/imgproxy/Z8THicjBD7CuYbcTG62-nbevoegFqFH8Zvvkiw2M1cQ/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtV05hS0Y4aXE3Q3VleGoyYUZ0b2lHeDlNQndIQWJXZkJUNmZ6Um5vWEgzVTY.webp",
 ];
+
 export default function PlaygroundPage() {
+  const [value, setValue] = useState(0);
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm h-full flex flex-col">
         <MainHeader>Sense</MainHeader>
         <WalletComponent />
-        <div className="flex-1 flex items-center justify-center">
+        {/* MouseTrail effect example */}
+
+        {/* <div className="flex-1 flex items-center justify-center">
           <ImageMouseTrail
             items={images}
             maxNumberOfImages={3}
@@ -78,6 +85,11 @@ export default function PlaygroundPage() {
               </h1>
             </article>
           </ImageMouseTrail>
+        </div> */}
+
+        {/* Motion Numbers examples */}
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+          <NumberInput value={value} min={0} max={99} onChange={setValue} />
         </div>
       </ContentWrapper>
     </Page>
