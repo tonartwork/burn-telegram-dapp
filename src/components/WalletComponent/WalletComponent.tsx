@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Wallet, Copy, CircleArrowOutUpLeft } from 'lucide-react';
+import { Wallet, Copy, CircleArrowOutUpLeft, Image as ImageIcon } from 'lucide-react';
 import { Address } from '@ton/core';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { cn } from '@/lib/utils';
@@ -30,6 +30,11 @@ export const WalletComponent: React.FC = () => {
       navigator.clipboard.writeText(wallet.toString());
       setIsOpen(false);
     }
+  };
+
+  const handleMyNFTs = () => {
+    router.push('/collection/my');
+    setIsOpen(false);
   };
 
   const handleDisconnect = () => {
@@ -84,6 +89,13 @@ export const WalletComponent: React.FC = () => {
           >
             <Copy size={16} className="text-gray-500" />
             <span className="text-sm text-gray-700">Copy Address</span>
+          </div>
+          <div 
+            className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 border-b border-gray-100"
+            onClick={handleMyNFTs}
+          >
+            <ImageIcon size={16} className="text-gray-500" />
+            <span className="text-sm text-gray-700">My NFT's</span>
           </div>
           <div 
             className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 text-red-500"
