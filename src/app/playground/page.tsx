@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CarouselCylindrical, CylindricalV2 } from '@/components/ui/CarouselCylindrical';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import ImageMouseTrail from '@/components/ui/Mousetrail';
 import { NumberInput } from '@/components/ui/NumberInput';
@@ -69,8 +70,10 @@ export default function PlaygroundPage() {
   const [value, setValue] = useState(0);
   const numbers = [124.23, 41.75, 2125.95];
   const diffs = [0.0564, -0.114, 0.0029];
-
+  
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const demoImages = images.slice(0, 12);
 
   const handleCustomClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % numbers.length);
@@ -125,7 +128,9 @@ export default function PlaygroundPage() {
               Shuffle
             </button>
           </> */}
-        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+
+        {/* ScratchToReveal example */}  
+        {/* <div className="flex-1 flex items-center justify-center min-h-[400px]">
         <ScratchToReveal
           width={250}
           height={250}
@@ -141,7 +146,17 @@ export default function PlaygroundPage() {
               className="object-cover"
             />
           </ScratchToReveal>
+        </div> */}
+        
+        {/* Original Cylindrical Carousel */}
+        <div className="flex-1 flex items-center justify-center min-h-[100px]">
+          <CarouselCylindrical images={demoImages} />
         </div>
+
+        {/* Cylindrical V2 Carousel */}
+        {/* <div className="flex-1 flex items-center justify-center min-h-[100px]">
+          <CylindricalV2 images={demoImages} />
+        </div> */}
       </ContentWrapper>
     </Page>
   );
