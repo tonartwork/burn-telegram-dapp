@@ -5,7 +5,9 @@ import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import ImageMouseTrail from '@/components/ui/Mousetrail';
 import { NumberInput } from '@/components/ui/NumberInput';
 import { PriceWithDiff } from '@/components/ui/PriceWithDiff';
+import { ScratchToReveal } from '@/components/ui/ScratchToReveal';
 
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
@@ -74,6 +76,10 @@ export default function PlaygroundPage() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % numbers.length);
   };
 
+  const handleScratchComplete = () => {
+    console.log('Scratch complete');
+  };
+
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm h-full flex flex-col">
@@ -99,7 +105,7 @@ export default function PlaygroundPage() {
         </div> */}
 
         {/* Motion Numbers examples */}
-        <div className="flex-1 flex items-center justify-center min-h-[200px]">
+        {/* <div className="flex-1 flex items-center justify-center min-h-[200px]">
           <NumberInput value={value} min={0} max={99} onChange={setValue} />
         </div>
         <>
@@ -118,7 +124,24 @@ export default function PlaygroundPage() {
               </svg>
               Shuffle
             </button>
-          </>
+          </> */}
+        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+        <ScratchToReveal
+          width={250}
+          height={250}
+          minScratchPercentage={70}
+          className="flex items-center justify-center bg-gray-100 overflow-hidden rounded-2xl border-2"
+          onComplete={handleScratchComplete}
+        >
+            <Image
+              src={images[0]}
+              alt="Collection Preview"
+              width={250}
+              height={250}
+              className="object-cover"
+            />
+          </ScratchToReveal>
+        </div>
       </ContentWrapper>
     </Page>
   );
