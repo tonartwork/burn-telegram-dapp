@@ -35,7 +35,7 @@ export default function ImageMouseTrail({
     image.style.top = `${relativeY}px`;
     // console.log(refs.current[refs.current?.length - 1]);
 
-    if (currentZIndexRef.current > 40) {
+    if (currentZIndexRef.current > 80) {
       currentZIndexRef.current = 1;
     }
     image.style.zIndex = String(currentZIndexRef.current);
@@ -45,7 +45,7 @@ export default function ImageMouseTrail({
     if (fadeAnimation) {
       setTimeout(() => {
         image.dataset.status = 'inactive';
-      }, 1500);
+      }, 1800);
     }
     last = { x, y };
   };
@@ -58,7 +58,7 @@ export default function ImageMouseTrail({
   };
 
   const handleOnMove = (e) => {
-    if (distanceFromLast(e.clientX, e.clientY) > window.innerWidth / distance) {
+    if (distanceFromLast(e.clientX, e.clientY) > window.innerWidth / 10) {
       //console.log(e.clientX, e.clientY);
 
       const lead = refs.current[globalIndex % refs.current.length].current;
