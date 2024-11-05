@@ -11,7 +11,7 @@ type Props = {
   onChange?: (value: number) => void;
 };
 
-export default function NumberInput({
+export function NumberInput({
   value = 0,
   min = -Infinity,
   max = Infinity,

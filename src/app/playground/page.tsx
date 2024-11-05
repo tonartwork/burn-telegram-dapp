@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import ImageMouseTrail from '@/components/ui/Mousetrail';
-import NumberInput from '@/components/ui/NumberInput';
+import { NumberInput } from '@/components/ui/NumberInput';
+import { PriceWithDiff } from '@/components/ui/PriceWithDiff';
+
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
@@ -60,9 +62,18 @@ const images = [
   "https://cache.tonapi.io/imgproxy/PMV-MyCgay6LqcDROCI5E5IYVjHLcrweC9s_KF6IGNo/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtV1o0U2h6QXFSa1hRWkwyZjJWSHF6QTE3UlQ1RW5RSzZ2VXl1NU51b3BXdWY.webp",
   "https://cache.tonapi.io/imgproxy/Z8THicjBD7CuYbcTG62-nbevoegFqFH8Zvvkiw2M1cQ/rs:fill:500:500:1/g:no/aHR0cHM6Ly9zZW5zZS5teXBpbmF0YS5jbG91ZC9pcGZzL1FtV05hS0Y4aXE3Q3VleGoyYUZ0b2lHeDlNQndIQWJXZkJUNmZ6Um5vWEgzVTY.webp",
 ];
-
+// TODO: Number input requires @number-flow/react and framer-motion. Remove this lib if we're not using it. Or make code spliting and lazy loading.
 export default function PlaygroundPage() {
   const [value, setValue] = useState(0);
+  const numbers = [124.23, 41.75, 2125.95];
+  const diffs = [0.0564, -0.114, 0.0029];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleCustomClick = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % numbers.length);
+  };
+
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm h-full flex flex-col">
@@ -88,9 +99,26 @@ export default function PlaygroundPage() {
         </div> */}
 
         {/* Motion Numbers examples */}
-        <div className="flex-1 flex items-center justify-center min-h-[400px]">
+        <div className="flex-1 flex items-center justify-center min-h-[200px]">
           <NumberInput value={value} min={0} max={99} onChange={setValue} />
         </div>
+        <>
+            <PriceWithDiff value={numbers[currentIndex]} diff={diffs[currentIndex]} />
+            <button
+              onClick={handleCustomClick}
+              className='flex h-11 mt-4 w-fit mx-auto items-center gap-2 rounded-md border bg-primary-foreground px-5 text-sm font-medium text-primary transition-colors hover:bg-accent hover:text-accent-foreground active:scale-[98%]'
+            >
+              <svg className='size-4' strokeLinejoin='round' viewBox='0 0 16 16'>
+                <path
+                  fillRule='evenodd'
+                  clipRule='evenodd'
+                  d='M2.72876 6.42462C3.40596 4.15488 5.51032 2.5 8.00002 2.5C10.0902 2.5 11.9092 3.66566 12.8405 5.38592L13.1975 6.04548L14.5166 5.33138L14.1596 4.67183C12.9767 2.48677 10.6625 1 8.00002 1C5.05453 1 2.53485 2.81872 1.50122 5.39447V3.75V3H0.0012207V3.75V7.17462C0.0012207 7.58883 0.337007 7.92462 0.751221 7.92462H4.17584H4.92584V6.42462H4.17584H2.72876ZM13.2713 9.57538H11.8243H11.0743V8.07538H11.8243H15.2489C15.6631 8.07538 15.9989 8.41117 15.9989 8.82538V12.25V13H14.4989V12.25V10.6053C13.4653 13.1812 10.9456 15 8.00002 15C5.35065 15 3.04619 13.5279 1.85809 11.3605L1.49757 10.7029L2.8129 9.98181L3.17342 10.6395C4.10882 12.3458 5.92017 13.5 8.00002 13.5C10.4897 13.5 12.5941 11.8451 13.2713 9.57538Z'
+                  fill='currentColor'
+                ></path>
+              </svg>
+              Shuffle
+            </button>
+          </>
       </ContentWrapper>
     </Page>
   );
