@@ -88,6 +88,9 @@ const config = {
   		fontFamily: {
   			'inter-tight': ['var(--font-inter-tight)'],
   			'space-grotesk': ['var(--font-space-grotesk)']
+  		},
+  		transitionTimingFunction: {
+  			'out-expo': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
   		}
   	}
   },
