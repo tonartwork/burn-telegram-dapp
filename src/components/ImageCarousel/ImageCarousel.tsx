@@ -11,6 +11,8 @@ import {
 import { NftItem } from '@/core/services/TonApiService';
 import { Loader2 } from "lucide-react";
 
+const FALLBACK_IMAGE_URL = './temp-fallback.png';
+
 interface ImageCarouselProps {
   items: NftItem[];
   onSelect: (item: NftItem) => void;
@@ -72,7 +74,7 @@ const ImageGrid = ({
           onClick={() => !isBurning && onSelect(item)}
         >
           <Image
-            src={imageUrl}
+            src={imageUrl || FALLBACK_IMAGE_URL}
             alt={`NFT ${item.address}`}
             width={100}
             height={100}
