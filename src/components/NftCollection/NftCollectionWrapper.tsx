@@ -15,7 +15,7 @@ interface NftCollectionWrapperProps {
 }
 
 export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftAddress }) => {
-  const { collectionInfo, isLoading, error } = useNftCollectionInfo();
+  const { collectionInfo, isLoading, error } = useNftCollectionInfo(nftAddress);
 
   if (isLoading) {
     return <NftCollectionSkeleton />;
@@ -29,5 +29,5 @@ export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftA
     );
   }
 
-  return <DynamicNftCollection collectionInfo={collectionInfo} />;
+  return ( <DynamicNftCollection collectionInfo={collectionInfo} /> );
 };
