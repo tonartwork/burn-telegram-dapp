@@ -12,6 +12,8 @@ import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
 import nftPreviews from '@/lib/nftPreviews';
 import { useTonConnect } from '@/hooks/useTonConnect';
+import { prefetchCollectionInfo } from '@/hooks/useNftCollectionInfo';
+import { env } from '@/core/config/env';
 
 export default function Home() {
   const { connected, wallet, ui: tonConnectUI} = useTonConnect();
@@ -20,7 +22,9 @@ export default function Home() {
 
   useEffect(() => {
     router.prefetch('/collection')
-  }, [router])
+
+    prefetchCollectionInfo(env.NEXT_PUBLIC_COLLECTION_ADDRESS);
+  }, [router, prefetchCollectionInfo])
 
   return (
     <Page back={false}>

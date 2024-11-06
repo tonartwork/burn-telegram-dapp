@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useNftCollectionInfo } from '@/hooks/useNftCollectionInfo';
 import { NftCollectionSkeleton } from './NftCollectionSkeleton';
@@ -5,7 +6,6 @@ import { NftCollectionSkeleton } from './NftCollectionSkeleton';
 const DynamicNftCollection = dynamic(
   () => import('./NftCollection').then(mod => ({ default: mod.NftCollection })),
   {
-    loading: () => <NftCollectionSkeleton />,
     ssr: false
   }
 );
@@ -15,7 +15,7 @@ interface NftCollectionWrapperProps {
 }
 
 export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftAddress }) => {
-  const { collectionInfo, isLoading, isRefreshing, error } = useNftCollectionInfo(nftAddress);
+  const { collectionInfo, isLoading, error } = useNftCollectionInfo(nftAddress);
 
   if (error) {
     return (
@@ -25,13 +25,15 @@ export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftA
     );
   }
 
+  if (!collectionInfo || isLoading) {
+    return <NftCollectionSkeleton />;
+  }
+
   return (
     <div className="relative">
-      {isLoading ? (
-        <NftCollectionSkeleton />
-      ) : (
+      <Suspense fallback={<NftCollectionSkeleton />}>
         <DynamicNftCollection collectionInfo={collectionInfo} />
-      )}
+      </Suspense>
     </div>
   );
 };
