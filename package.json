@@ -54,5 +54,6 @@
   },
   "trustedDependencies": [
     "core-js-pure"
-  ]
+  ],
+  "sideEffects": false
 }

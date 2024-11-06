@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
@@ -15,6 +16,11 @@ import { useTonConnect } from '@/hooks/useTonConnect';
 export default function Home() {
   const { connected, wallet, ui: tonConnectUI} = useTonConnect();
   const [nftImages, _setNftImages] = useState<string[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch('/collection')
+  }, [router])
 
   return (
     <Page back={false}>
@@ -38,11 +44,11 @@ export default function Home() {
             </CardHeader>
             <CardFooter>
               {connected ? (
-                <Link href="/collection" className="w-full">
-                  <Button className="w-full bg-black text-white hover:bg-gray-800">
-                    View Collection
-                  </Button>
-                </Link>
+                <Button className="w-full bg-black text-white hover:bg-gray-800"
+                  onClick={() => router.push('/collection')}
+                >
+                  View Collection
+                </Button>
               ) : (
                 <Button 
                   className="w-full bg-black text-white hover:bg-gray-800"

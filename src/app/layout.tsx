@@ -20,6 +20,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://tonapi.io" />
+        <link rel="preconnect" href="https://cache.tonapi.io" />
+        <link rel="preconnect" href="https://sense.mypinata.cloud" />
+        
+        <link rel="dns-prefetch" href="https://tonapi.io" />
+        <link rel="dns-prefetch" href="https://cache.tonapi.io" />
+        <link rel="dns-prefetch" href="https://sense.mypinata.cloud" />
+      </head>
       <body>
         <Root>
           {children}
