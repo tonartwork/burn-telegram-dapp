@@ -5,6 +5,7 @@ import { Address } from '@ton/core';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { prefetchNftCollection } from '@/hooks/useNftCollection';
 
 export const WalletComponent: React.FC = () => {
   const { connected, wallet, ui: tonConnectUI, networkType} = useTonConnect();
@@ -15,6 +16,12 @@ export const WalletComponent: React.FC = () => {
   useEffect(() => {
     router.prefetch('/collection/my')
   }, [router])
+
+  useEffect(() => {
+    if (wallet) {
+      prefetchNftCollection(wallet.toString());
+    }
+  }, [wallet]);
 
   const formatAddress = (address: string) => {
     if (!address) return '';
