@@ -11,7 +11,7 @@ import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { useTonConnect } from '@/hooks/useTonConnect';
 import { useNftItemContract } from '@/hooks/useNftItemContract';
-import { NftCollection } from '@/components/NftCollection/NftCollection';
+import { NftCollectionWrapper } from '@/components/NftCollection/NftCollectionWrapper';
 
 
 export default function CollectionPage() {
@@ -33,7 +33,7 @@ export default function CollectionPage() {
           <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden w-full">
             <CardContent className="pt-6 mb-6">
             </CardContent>
-            <NftCollection nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
+            <NftCollectionWrapper nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
             <CardFooter>
               <Button 
                 className="w-full bg-black text-white hover:bg-gray-800 mt-1"

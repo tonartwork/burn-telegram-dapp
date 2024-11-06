@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useRouter } from 'next/navigation';
+
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
@@ -11,10 +12,19 @@ import { MainHeader } from '@/components/ui/typo/MainHeader';
 import { ImageSlider } from '@/components/ImageSlider/ImageSlider';
 import nftPreviews from '@/lib/nftPreviews';
 import { useTonConnect } from '@/hooks/useTonConnect';
+import { prefetchCollectionInfo } from '@/hooks/useNftCollectionInfo';
+import { env } from '@/core/config/env';
 
 export default function Home() {
   const { connected, wallet, ui: tonConnectUI} = useTonConnect();
   const [nftImages, _setNftImages] = useState<string[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch('/collection')
+
+    prefetchCollectionInfo(env.NEXT_PUBLIC_COLLECTION_ADDRESS);
+  }, [router, prefetchCollectionInfo])
 
   return (
     <Page back={false}>
@@ -38,11 +48,11 @@ export default function Home() {
             </CardHeader>
             <CardFooter>
               {connected ? (
-                <Link href="/burn" className="w-full">
-                  <Button className="w-full bg-black text-white hover:bg-gray-800">
-                    View Collection
-                  </Button>
-                </Link>
+                <Button className="w-full bg-black text-white hover:bg-gray-800"
+                  onClick={() => router.push('/collection')}
+                >
+                  View Collection
+                </Button>
               ) : (
                 <Button 
                   className="w-full bg-black text-white hover:bg-gray-800"
