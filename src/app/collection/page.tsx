@@ -1,28 +1,21 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
 import { env } from '@/core/config/env';
-import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Page } from '@/components/Page';
 import { WalletComponent } from '@/components/WalletComponent/WalletComponent';
 import { ContentWrapper } from '@/components/ui/contents/ContentWrapper';
 import { MainHeader } from '@/components/ui/typo/MainHeader';
-import { useTonConnect } from '@/hooks/useTonConnect';
+
 import { useNftItemContract } from '@/hooks/useNftItemContract';
 import { NftCollectionWrapper } from '@/components/NftCollection/NftCollectionWrapper';
-
+import nftPreviews from '@/lib/nftPreviews';
+import { CarouselCylindrical } from '@/components/ui/CarouselCylindrical';
 
 export default function CollectionPage() {
-  const DISPLAY_ERROR_TEXT = false;
-  const router = useRouter();
-  const { connected, wallet, ui: tonConnectUI } = useTonConnect();
-  const walletAddress = wallet?.toString() ?? null;
-
   const { isTransferLoading } = useNftItemContract();
-
-  const error = null;
+  const demoImages = nftPreviews.slice(0, 12);
 
   return (
     <Page>
@@ -32,6 +25,14 @@ export default function CollectionPage() {
         <div className="flex-1 flex items-center justify-center">
           <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden w-full">
             <CardContent className="pt-6 mb-6">
+              <CarouselCylindrical 
+                images={demoImages}
+                height={220}
+                autoRotate={true}
+                autoRotateSpeed={0.2}
+                dragEnabled={true}
+                cylinderWidth={1100}
+              />
             </CardContent>
             <NftCollectionWrapper nftAddress={env.NEXT_PUBLIC_COLLECTION_ADDRESS} />
             <CardFooter>
@@ -45,7 +46,6 @@ export default function CollectionPage() {
             </CardFooter>
           </Card>
         </div>
-        { renderError(DISPLAY_ERROR_TEXT && error) }
       </ContentWrapper>
     </Page>
   );
