@@ -61,9 +61,9 @@ export function useNftCollectionInfo(collectionAddress = env.NEXT_PUBLIC_COLLECT
   const [error, setError] = useState<Error | null>(null);
 
   const fetchCollectionInfo = useCallback(async (silent = false) => {
-    if (!silent) {
+    if (!silent && !collectionInfoCache.has(collectionAddress)) {
       setIsLoading(true);
-    } else {
+    } else if (silent) {
       setIsRefreshing(true);
     }
 
@@ -95,9 +95,10 @@ export function useNftCollectionInfo(collectionAddress = env.NEXT_PUBLIC_COLLECT
   }, [collectionAddress]);
 
   useEffect(() => {
-    const hasCachedData = collectionInfoCache.has(collectionAddress);
-    fetchCollectionInfo(!hasCachedData);
-  }, [collectionAddress]);
+    if (!collectionInfoCache.has(collectionAddress)) {
+      fetchCollectionInfo(false);
+    }
+  }, [collectionAddress, fetchCollectionInfo]);
 
   return {
     collectionInfo,

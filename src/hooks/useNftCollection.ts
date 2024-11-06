@@ -44,9 +44,10 @@ export const useNftCollection = (walletAddress: string | null) => {
       return;
     }
 
-    if (!silent) {
+    // Only set loading state if we don't have cached data
+    if (!silent && !nftCache.has(walletAddress)) {
       setIsLoading(true);
-    } else {
+    } else if (silent) {
       setIsRefreshing(true);
     }
 
@@ -60,6 +61,7 @@ export const useNftCollection = (walletAddress: string | null) => {
       nftCache.set(walletAddress, {
         data: fetchedNfts,
       });
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch NFTs'));
     } finally {
@@ -69,8 +71,10 @@ export const useNftCollection = (walletAddress: string | null) => {
   }, [walletAddress]);
 
   useEffect(() => {
-    // Always fetch fresh data when wallet changes
-    fetchNfts(false);
+    // Only fetch if we don't have cached data
+    if (!nftCache.has(walletAddress)) {
+      fetchNfts(false);
+    }
   }, [walletAddress]); // Remove fetchNfts from dependencies to avoid double fetching
 
   return { 

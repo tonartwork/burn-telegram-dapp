@@ -5,7 +5,7 @@ import { NftCollectionSkeleton } from './NftCollectionSkeleton';
 const DynamicNftCollection = dynamic(
   () => import('./NftCollection').then(mod => ({ default: mod.NftCollection })),
   {
-    loading: () => null,
+    loading: () => <NftCollectionSkeleton />,
     ssr: false
   }
 );
