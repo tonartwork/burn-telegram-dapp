@@ -95,7 +95,7 @@ export const WalletComponent: React.FC = () => {
             onClick={handleMyNFTs}
           >
             <ImageIcon size={16} className="text-gray-500" />
-            <span className="text-sm text-gray-700">My NFT's</span>
+            <span className="text-sm text-gray-700">My NFT&apos;s</span>
           </div>
           <div 
             className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 text-red-500"
