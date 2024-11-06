@@ -5,6 +5,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "ES2020",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -28,8 +29,7 @@
       "@public/*": [
         "./public/*"
       ]
-    },
-    "target": "ES2017"
+    }
   },
   "include": [
     "next-env.d.ts",
