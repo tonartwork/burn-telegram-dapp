@@ -1,4 +1,4 @@
-import { withSentryConfig } from '@sentry/nextjs';
+import {withSentryConfig} from '@sentry/nextjs';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/core/i18n/request.ts');
@@ -6,13 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/core/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      { hostname: 'localhost' },
-      { hostname: 'sense.mypinata.cloud' },
-      { hostname: 'tonapi.io' },
-      { hostname: 'cache.tonapi.io' },
-      { hostname: '*.tonart.work' }
-    ],
+    domains: ['localhost', 'sense.mypinata.cloud', 'tonapi.io', 'cache.tonapi.io', '*.tonart.work'],
     unoptimized: true,
   },
   output: 'export',
