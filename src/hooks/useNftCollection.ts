@@ -29,7 +29,12 @@ export const useNftCollection = (walletAddress: string | null) => {
     const cached = nftCache.get(walletAddress);
     return cached?.data || [];
   });
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [isLoading, setIsLoading] = useState(() => {
+    if (!walletAddress) return false;
+    return !nftCache.has(walletAddress);
+  });
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 

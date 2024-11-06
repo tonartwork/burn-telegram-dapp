@@ -5,7 +5,7 @@ import { NftCollectionSkeleton } from './NftCollectionSkeleton';
 const DynamicNftCollection = dynamic(
   () => import('./NftCollection').then(mod => ({ default: mod.NftCollection })),
   {
-    loading: () => <NftCollectionSkeleton />,
+    loading: () => null,
     ssr: false
   }
 );
@@ -15,11 +15,7 @@ interface NftCollectionWrapperProps {
 }
 
 export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftAddress }) => {
-  const { collectionInfo, isLoading, error } = useNftCollectionInfo(nftAddress);
-
-  if (isLoading) {
-    return <NftCollectionSkeleton />;
-  }
+  const { collectionInfo, isLoading, isRefreshing, error } = useNftCollectionInfo(nftAddress);
 
   if (error) {
     return (
@@ -29,5 +25,13 @@ export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftA
     );
   }
 
-  return ( <DynamicNftCollection collectionInfo={collectionInfo} /> );
+  return (
+    <div className="relative">
+      {isLoading ? (
+        <NftCollectionSkeleton />
+      ) : (
+        <DynamicNftCollection collectionInfo={collectionInfo} />
+      )}
+    </div>
+  );
 };

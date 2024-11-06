@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { tonApiService } from '@/core/services/TonApiService';
 import { env } from '@/core/config/env';
 
@@ -20,7 +20,6 @@ const INITIAL_STATE: CollectionInfo = {
   description: 'unique art-objects'
 };
 
-// Create a cache for collection info
 const collectionInfoCache = new Map<string, {
   data: CollectionInfo;
   timestamp: number;
@@ -29,7 +28,6 @@ const collectionInfoCache = new Map<string, {
 export const prefetchCollectionInfo = async (collectionAddress: string) => {
   try {
     const collection = await tonApiService.getNftCollection(collectionAddress);
-    
     if (collection) {
       const collectionInfo = {
         ...INITIAL_STATE,
@@ -54,48 +52,49 @@ export function useNftCollectionInfo(collectionAddress = env.NEXT_PUBLIC_COLLECT
     const cached = collectionInfoCache.get(collectionAddress);
     return cached?.data || INITIAL_STATE;
   });
-  const [isLoading, setIsLoading] = useState(!collectionInfoCache.has(collectionAddress));
+
+  const [isLoading, setIsLoading] = useState(() => {
+    return !collectionInfoCache.has(collectionAddress);
+  });
+
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchCollectionInfo = async (silent = false) => {
-      try {
-        if (!silent) {
-          setIsLoading(true);
-        } else {
-          setIsRefreshing(true);
-        }
+  const fetchCollectionInfo = useCallback(async (silent = false) => {
+    if (!silent) {
+      setIsLoading(true);
+    } else {
+      setIsRefreshing(true);
+    }
 
-        const collection = await tonApiService.getNftCollection(collectionAddress);
+    try {
+      const collection = await tonApiService.getNftCollection(collectionAddress);
+      
+      if (collection) {
+        const newCollectionInfo = {
+          ...INITIAL_STATE,
+          name: collection.metadata?.name || INITIAL_STATE.name,
+          image: collection.previews?.[1]?.url || INITIAL_STATE.image,
+          totalItems: collection.next_item_index || INITIAL_STATE.totalItems,
+          mintedItems: collection.next_item_index || 0,
+        };
 
-        if (collection) {
-          const newCollectionInfo = {
-            ...INITIAL_STATE,
-            name: collection.metadata?.name || INITIAL_STATE.name,
-            image: collection.previews?.[1]?.url || INITIAL_STATE.image,
-            totalItems: collection.next_item_index || INITIAL_STATE.totalItems,
-            mintedItems: collection.next_item_index || 0,
-          };
-
-          setCollectionInfo(newCollectionInfo);
-          collectionInfoCache.set(collectionAddress, {
-            data: newCollectionInfo,
-            timestamp: Date.now()
-          });
-        }
-        
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching collection info:', err);
-        setError(err instanceof Error ? err : new Error('Failed to fetch collection info'));
-      } finally {
-        setIsLoading(false);
-        setIsRefreshing(false);
+        setCollectionInfo(newCollectionInfo);
+        collectionInfoCache.set(collectionAddress, {
+          data: newCollectionInfo,
+          timestamp: Date.now()
+        });
       }
-    };
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch collection info'));
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [collectionAddress]);
 
-    // If we have cached data, do a silent refresh
+  useEffect(() => {
     const hasCachedData = collectionInfoCache.has(collectionAddress);
     fetchCollectionInfo(!hasCachedData);
   }, [collectionAddress]);
@@ -104,6 +103,7 @@ export function useNftCollectionInfo(collectionAddress = env.NEXT_PUBLIC_COLLECT
     collectionInfo,
     isLoading,
     isRefreshing,
-    error
+    error,
+    refetch: () => fetchCollectionInfo(true)
   };
 }
