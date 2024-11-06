@@ -31,7 +31,7 @@ export default function MyCollectionPage() {
   const { wallet } = useTonConnect();
   const walletAddress = wallet?.toString() ?? null;
 
-  const { nfts } = useNftCollection(walletAddress);
+  const { nfts, isLoading } = useNftCollection(walletAddress);
 
   return (
     <Page>
@@ -40,13 +40,13 @@ export default function MyCollectionPage() {
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
-            <Suspense fallback={
+            {isLoading && nfts.length === 0 ? (
               <div className="animate-pulse">
                 <div className="flex justify-center">
                   <div className="w-48 h-48 bg-gray-200 rounded-lg"></div>
                 </div>
               </div>
-            }>
+            ) : (
               <DynamicImageCarousel 
                 items={nfts}
                 onSelect={() => {}}
@@ -54,7 +54,7 @@ export default function MyCollectionPage() {
                 isLoading={false}
                 burningNfts={new Set()}
               />
-            </Suspense>
+            )}
           </CardContent>
           <CardFooter>
             <Button 
