@@ -49,7 +49,7 @@ export default function Home() {
             <CardFooter>
               {connected ? (
                 <Button className="w-full bg-black text-white hover:bg-gray-800"
-                  onClick={() => router.push('/collection')}
+                  onClick={() => router.push('/burn')}
                 >
                   View Collection
                 </Button>
