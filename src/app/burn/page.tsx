@@ -112,7 +112,7 @@ export default function CollectionPage() {
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
-        <MainHeader>Sense x Guardians <br/> Collection </MainHeader>
+        <MainHeader>Sense x Guardians</MainHeader>
         <WalletComponent />
         <Card className="mb-2 bg-white text-mainText border-none rounded-xl overflow-hidden">
           <CardContent className="pt-6">
