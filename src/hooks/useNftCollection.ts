@@ -26,13 +26,13 @@ export const prefetchNftCollection = async (walletAddress: string | null) => {
 export const useNftCollection = (walletAddress: string | null) => {
   const [nfts, setNfts] = useState<NftItem[]>(() => {
     if (!walletAddress) return [];
-    const cached = nftCache.get(walletAddress);
+    const cached = nftCache.get(walletAddress!);
     return cached?.data || [];
   });
 
   const [isLoading, setIsLoading] = useState(() => {
     if (!walletAddress) return false;
-    return !nftCache.has(walletAddress);
+    return !nftCache.has(walletAddress!);
   });
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -45,7 +45,7 @@ export const useNftCollection = (walletAddress: string | null) => {
     }
 
     // Only set loading state if we don't have cached data
-    if (!silent && !nftCache.has(walletAddress)) {
+    if (!silent && !nftCache.has(walletAddress!)) {
       setIsLoading(true);
     } else if (silent) {
       setIsRefreshing(true);
@@ -72,7 +72,7 @@ export const useNftCollection = (walletAddress: string | null) => {
 
   useEffect(() => {
     // Only fetch if we don't have cached data
-    if (!nftCache.has(walletAddress)) {
+    if (!nftCache.has(walletAddress!)) {
       fetchNfts(false);
     }
   }, [walletAddress]); // Remove fetchNfts from dependencies to avoid double fetching

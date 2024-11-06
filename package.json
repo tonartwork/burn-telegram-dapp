@@ -6,6 +6,7 @@
     "node": ">=22.0.0",
     "bun": ">=1.0.0"
   },
+  "type": "module",
   "scripts": {
     "dev": "bun run next dev",
     "dev:https": "bun run next dev --experimental-https",
