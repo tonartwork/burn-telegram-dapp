@@ -12,6 +12,10 @@ export const WalletComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    router.prefetch('/collection/my')
+  }, [router])
+
   const formatAddress = (address: string) => {
     if (!address) return '';
     return `${Address.parse(address).toString().slice(0, 3)}...${Address.parse(address).toString().slice(-4)}`;
