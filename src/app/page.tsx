@@ -38,7 +38,7 @@ export default function Home() {
             </CardHeader>
             <CardFooter>
               {connected ? (
-                <Link href="/collection" className="w-full">
+                <Link href="/burn" className="w-full">
                   <Button className="w-full bg-black text-white hover:bg-gray-800">
                     View Collection
                   </Button>
