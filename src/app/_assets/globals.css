@@ -101,11 +101,6 @@ body {
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #1a202c;
-  color: #ffffff;
-}
-
 .container {
   max-width: 100%;
   margin-left: auto;
