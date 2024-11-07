@@ -12,6 +12,7 @@ export interface EnvVariables {
 // Export environment variables
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
+  NEXT_TON_NETWORK_TYPE: process.env.NEXT_TON_NETWORK_TYPE || 'testnet',
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://localhost:3000',
   NEXT_PUBLIC_TONAPI_KEY: process.env.NEXT_PUBLIC_TONAPI_KEY || '',
   NEXT_PUBLIC_JETTON_ADDRESS: process.env.NEXT_PUBLIC_JETTON_ADDRESS || '',
