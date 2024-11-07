@@ -84,7 +84,7 @@ export function useNftItemContract() {
         response_destination: burnContractAddress,
         custom_payload: null,
         forward_amount: toNano(forwardAmount),
-        forward_payload: beginCell().storeUint(BigInt(itemIndex), 8).endCell(),
+        forward_payload: beginCell().storeUint(BigInt(itemIndex), 16).endCell(),
       };
 
       await nftItemContract.send(
