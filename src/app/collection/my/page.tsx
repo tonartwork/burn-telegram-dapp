@@ -60,9 +60,9 @@ export default function MyCollectionPage() {
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
               disabled={false}
-              onClick={() => router.push('/collection')}
+              onClick={() => router.push('/burn')}
             >
-              {'Mint more NFT'}
+              {'Burn event'}
             </Button>
           </CardFooter>
         </Card>
