@@ -7,6 +7,7 @@ export interface EnvVariables {
   NEXT_PUBLIC_COLLECTION_ADDRESS: string
   NEXT_PUBLIC_BURN_CONTRACT_ADDRESS?: string
   NEXT_PUBLIC_TONCENTER_MAINNET_KEY: string
+  NEXT_TON_NETWORK_TYPE: 'mainnet' | 'testnet'
 }
 
 // Export environment variables
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV === 'development') {
     'NEXT_PUBLIC_TONAPI_KEY',
     'NEXT_PUBLIC_TONCENTER_MAINNET_KEY',
     'NEXT_PUBLIC_TONCENTER_TESTNET_KEY',
+    'NEXT_TON_NETWORK_TYPE',
   ] as const;
 
   for (const key of requiredEnvs) {
