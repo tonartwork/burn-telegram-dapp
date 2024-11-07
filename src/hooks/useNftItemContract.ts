@@ -10,6 +10,7 @@ export function useNftItemContract() {
   const { client } = useTonClient();
   const { sender } = useTonConnect();
   const [itemContractAddress, setContractAddress] = useState<Address | null>(null);
+  const [itemIndex, setItemIndex] = useState<number>(0);
 
   const [state, setState] = useState<{
     owner: Address | null;
@@ -34,6 +35,7 @@ export function useNftItemContract() {
     try {
       console.log('selectNftItem', item);
       setContractAddress(Address.parse(item.address));
+      setItemIndex(item.index);
       setState((prev) => ({ ...prev, isContractReady: true, error: null }));
     } catch (error) {
       setState((prev) => ({ 
@@ -71,7 +73,8 @@ export function useNftItemContract() {
 
     setState((prev) => ({ ...prev, isTransferLoading: true, error: null }));
     try {
-      const gasFee = 0.1;
+      const gasFee = 0.2;
+      const forwardAmount = 0.1;
       const burnContractAddress = Address.parse(env.NEXT_PUBLIC_BURN_CONTRACT_ADDRESS);
 
       const transferParams: Transfer = {
@@ -80,8 +83,8 @@ export function useNftItemContract() {
         query_id: BigInt(Math.floor(Math.random() * 1000000000000000000)),
         response_destination: burnContractAddress,
         custom_payload: null,
-        forward_amount: BigInt(0),
-        forward_payload: beginCell().endCell(),
+        forward_amount: toNano(forwardAmount),
+        forward_payload: beginCell().storeUint(BigInt(itemIndex), 8).endCell(),
       };
 
       await nftItemContract.send(
