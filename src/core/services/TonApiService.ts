@@ -11,7 +11,7 @@ export class TonApiService {
   private client: Api<any>;
 
   private constructor() {
-    const isTestnet = env.NEXT_TON_NETWORK_TYPE === 'testnet';
+    const isTestnet = env.NEXT_PUBLIC_TON_NETWORK_TYPE === 'testnet';
     const apiKey = env.NEXT_PUBLIC_TONAPI_KEY;
     const baseUrl = isTestnet ? 'https://testnet.tonapi.io' : 'https://tonapi.io';
     const httpClient = new HttpClient({

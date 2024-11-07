@@ -7,13 +7,13 @@ export interface EnvVariables {
   NEXT_PUBLIC_COLLECTION_ADDRESS: string
   NEXT_PUBLIC_BURN_CONTRACT_ADDRESS?: string
   NEXT_PUBLIC_TONCENTER_MAINNET_KEY: string
-  NEXT_TON_NETWORK_TYPE: 'mainnet' | 'testnet'
+  NEXT_PUBLIC_TON_NETWORK_TYPE: 'mainnet' | 'testnet'
 }
 
 // Export environment variables
 export const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  NEXT_TON_NETWORK_TYPE: process.env.NEXT_TON_NETWORK_TYPE || 'testnet',
+  NEXT_PUBLIC_TON_NETWORK_TYPE: process.env.NEXT_PUBLIC_TON_NETWORK_TYPE || 'testnet',
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://localhost:3000',
   NEXT_PUBLIC_TONAPI_KEY: process.env.NEXT_PUBLIC_TONAPI_KEY || '',
   NEXT_PUBLIC_JETTON_ADDRESS: process.env.NEXT_PUBLIC_JETTON_ADDRESS || '',
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
     'NEXT_PUBLIC_TONAPI_KEY',
     'NEXT_PUBLIC_TONCENTER_MAINNET_KEY',
     'NEXT_PUBLIC_TONCENTER_TESTNET_KEY',
-    'NEXT_TON_NETWORK_TYPE',
+    'NEXT_PUBLIC_TON_NETWORK_TYPE',
   ] as const;
 
   for (const key of requiredEnvs) {
