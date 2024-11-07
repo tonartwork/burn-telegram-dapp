@@ -21,7 +21,7 @@ interface ImageCarouselProps {
   burningNfts: Set<string>;
 }
 
-const CAROUSEL_ITEMS_LIMIT = 3;
+const CAROUSEL_ITEMS_LIMIT = 1;
 
 const LoadingGrid = () => (
   <div className="grid grid-cols-3 gap-2 pt-2 pb-2 pr-6 pl-6">
