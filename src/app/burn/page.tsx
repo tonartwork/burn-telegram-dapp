@@ -147,8 +147,8 @@ const renderJettonMeta = (isLoading: boolean, balance: string | null, jettonMeta
       Loading token data...
     </p>
   </>);
-  let balanceText = `You have earned ${balance || '0'} ${jettonMeta.symbol}`;
-  if (!balanceText || balance === '0') balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
+  let balanceText = `Burn NFT to earn ${jettonMeta.symbol}`;
+  if (balance && balance !== '0') balanceText =  `You have earned ${balance} ${jettonMeta.symbol}`;
   return (
     <>
       <p className="text-center text-sm text-gray-400 mb-2 px-10">
