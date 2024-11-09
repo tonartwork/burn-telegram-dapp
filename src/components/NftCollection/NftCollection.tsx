@@ -4,6 +4,7 @@ interface CollectionInfo {
   image: string;
   name: string;
   totalItems: number;
+  mintedItems: number;
   description: string;
   price: string;
 }
@@ -29,7 +30,7 @@ export const NftCollection: React.FC<NftCollectionProps> = ({ collectionInfo }) 
           <div className="space-y-1">
             <h3 className="text-lg font-semibold -mt-1 -mb-1">{collectionInfo.name}</h3>
             <p className="text-sm text-gray-600">
-              {collectionInfo.totalItems} {collectionInfo.description}
+              {collectionInfo.mintedItems} of {collectionInfo.totalItems} are minted
             </p>
           </div>
           <div className="flex justify-between mt-3 pr-1">

@@ -33,7 +33,7 @@ export const prefetchCollectionInfo = async (collectionAddress: string) => {
         ...INITIAL_STATE,
         name: collection.metadata?.name || INITIAL_STATE.name,
         image: collection.previews?.[1]?.url || INITIAL_STATE.image,
-        totalItems: collection.next_item_index || INITIAL_STATE.totalItems,
+        totalItems: INITIAL_STATE.totalItems,
         mintedItems: collection.next_item_index || 0,
       };
       
@@ -75,7 +75,7 @@ export function useNftCollectionInfo(collectionAddress = env.NEXT_PUBLIC_COLLECT
           ...INITIAL_STATE,
           name: collection.metadata?.name || INITIAL_STATE.name,
           image: collection.previews?.[1]?.url || INITIAL_STATE.image,
-          totalItems: collection.next_item_index || INITIAL_STATE.totalItems,
+          totalItems: INITIAL_STATE.totalItems,
           mintedItems: collection.next_item_index || 0,
         };
 
