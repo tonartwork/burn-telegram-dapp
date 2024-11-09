@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useNftCollectionInfo } from '@/hooks/useNftCollectionInfo';
 import { NftCollectionSkeleton } from './NftCollectionSkeleton';
+import { useNftCollectionImages } from '@/hooks/useNftCollectionImages';
 
 const DynamicNftCollection = dynamic(
   () => import('./NftCollection').then(mod => ({ default: mod.NftCollection })),
@@ -17,6 +18,8 @@ interface NftCollectionWrapperProps {
 
 export const NftCollectionWrapper: React.FC<NftCollectionWrapperProps> = ({ nftAddress }) => {
   const { collectionInfo, isLoading, error } = useNftCollectionInfo(nftAddress);
+  // const { images, isLoading: isImagesLoading, error: imagesError, refetch: refetchImages } = useNftCollectionImages();
+  // console.log('images', images);
 
   if (error) {
     return (
