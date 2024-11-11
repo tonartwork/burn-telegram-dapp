@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Address, beginCell, fromNano, OpenedContract, toNano } from "@ton/core";
+import { Address, beginCell, Cell, fromNano, OpenedContract, toNano } from "@ton/core";
 import { NftItem, type Transfer } from "../../contracts/GuardiansNFT/tact_NftItem";
 import { useAsyncInitialize } from "./useAsyncInitialize";
 import { useTonClient } from "./useTonClient";
@@ -73,10 +73,11 @@ export function useNftItemContract() {
 
     setState((prev) => ({ ...prev, isTransferLoading: true, error: null }));
     try {
-      const gasFee = 0.2;
+      const gasFee = 0.15;
       const forwardAmount = 0.1;
       const burnContractAddress = Address.parse(env.NEXT_PUBLIC_BURN_CONTRACT_ADDRESS);
-
+      const state: Cell = await nftItemContract.init?.data!;
+      const forwardPayload = beginCell().storeRef(state).endCell();
       const transferParams: Transfer = {
         $$type: "Transfer",
         new_owner: burnContractAddress,
@@ -84,7 +85,7 @@ export function useNftItemContract() {
         response_destination: burnContractAddress,
         custom_payload: null,
         forward_amount: toNano(forwardAmount),
-        forward_payload: beginCell().storeUint(BigInt(itemIndex), 16).endCell(),
+        forward_payload: forwardPayload,
       };
 
       await nftItemContract.send(
