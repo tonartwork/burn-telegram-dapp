@@ -112,6 +112,41 @@ export class TonApiService {
     }
   }
 
+    /**
+   * Fetches low-level account information directly from the blockchain
+   * @param address Account address string
+   * @returns Promise with raw account information
+   */
+    public async getAccountInfo(address: string) {
+      try {
+        const accountInfo = await this.client.blockchain.getBlockchainRawAccount(address);
+
+        // Check if response is valid
+        if (!accountInfo) {
+          throw new Error('Invalid response from TON API');
+        }
+
+        return accountInfo;
+      } catch (error) {
+        // Handle API errors
+        if (error instanceof Response && typeof error.json === 'function') {
+          const errorText = await error.text();
+          console.error('API Error:', errorText);
+          throw new Error(errorText);
+        }
+
+        // Handle other types of errors
+        if (error instanceof Error) {
+          console.error('Error fetching account info:', error.message);
+          throw error;
+        }
+
+        // Handle unknown errors
+        console.error('Unknown error fetching account info:', error);
+        throw new Error('Failed to fetch account info');
+      }
+    }
+
   /**
    * Fetches NFT items from a collection
    * @param address Collection address string
@@ -188,6 +223,7 @@ export class TonApiService {
       throw new Error('Failed to fetch user collection NFTs');
     }
   }
+
 }
 
 // Export a default instance
