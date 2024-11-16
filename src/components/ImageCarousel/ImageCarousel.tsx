@@ -19,6 +19,7 @@ interface ImageCarouselProps {
   selectedAddress: string | null;
   isLoading?: boolean;
   burningNfts: Set<string>;
+  isEventEnded?: boolean;
 }
 
 const CAROUSEL_ITEMS_LIMIT = 1;
@@ -39,6 +40,15 @@ const EmptyState = () => (
     <div className="text-gray-400 mb-2">No NFTs Found</div>
     <p className="text-sm text-gray-500">
       {`You don't have any NFTs from this collection yet`}
+    </p>
+  </div>
+);
+
+const EventEndedState = () => (
+  <div className="flex flex-col items-center justify-center py-8 px-6 text-center mb-12">
+    <div className="text-gray-400 mb-2">The Burn Fest is over</div>
+    <p className="text-sm text-gray-500">
+      Follow <a className="underline text-black" href="https://t.me/sense_ton" target="_blank" rel="noopener noreferrer">Sense community</a> to stay updated on upcoming events and announcements!
     </p>
   </div>
 );
@@ -102,8 +112,14 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   onSelect, 
   selectedAddress,
   isLoading = false,
-  burningNfts
+  burningNfts,
+  isEventEnded
 }) => {
+
+  if (isEventEnded) {
+    return <EventEndedState />;
+  }
+
   if (isLoading) {
     return <LoadingGrid />;
   }

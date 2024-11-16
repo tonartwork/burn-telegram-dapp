@@ -18,6 +18,7 @@ import { repeat } from '@/utils/repeat';
 
 
 export default function CollectionPage() {
+  const EVENT_END_DATE = new Date("2024-11-16T22:39:00+07:00");
   const DISPLAY_ERROR_TEXT = false;
   const router = useRouter();
   const { connected, wallet, ui: tonConnectUI } = useTonConnect();
@@ -109,6 +110,7 @@ export default function CollectionPage() {
   const error = walletError || masterError || null;
   const jettonMeta = tokenData?.content || { symbol: 'tokens', description: 'Tokens will be used in the next events' };
 
+  const isEventEnded = new Date() >= EVENT_END_DATE;
   return (
     <Page>
       <ContentWrapper className="!px-0 !max-w-sm">
@@ -122,12 +124,13 @@ export default function CollectionPage() {
               selectedAddress={selectedNft?.address || null}
               isLoading={isCollectionLoading}
               burningNfts={burningNfts}
+              isEventEnded={isEventEnded}
             />
           </CardContent>
           <CardFooter>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
-              disabled={!selectedNft || !isContractReady || isTransferLoading}
+              disabled={isEventEnded || !selectedNft || !isContractReady || isTransferLoading}
               onClick={handleBurnNft}
             >
               {isTransferLoading ? 'Sending Transaction...' : 'Burn NFT'}
